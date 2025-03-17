@@ -11,6 +11,27 @@ python = "^3.12"
 flask = "^3.1.0"
 
 
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.11.0"
+invoke = "^2.2.0"
+pre-commit = "^4.1.0"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+lint.select = ["ALL"]
+include = ["src/**/*.py"]
+lint.ignore = [
+    "I001",
+    "D100",
+    "D103",
+    "D104",
+    "T201",
+    "D203",
+    "D212",
+    "PTH123",
+    "ANN201",
+    "COM812",
+]
