@@ -11,6 +11,8 @@
     --muted-foreground: 220 8.9% 46.1%;
     --accent: 220 14.3% 95.9%;
     --accent-foreground: 220.9 39.3% 11%;
+    --alert: 0 84.2% 60.2%;
+    --alert-foreground: 210 20% 98%;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -27,6 +29,8 @@
         --muted-foreground: 217.9 10.6% 64.9%;
         --accent: 215 27.9% 16.9%;
         --accent-foreground: 210 20% 98%;
+        --alert: 0 62.8% 30.6%;
+        --alert-foreground: 210 20% 98%;
     }
 }
 
@@ -113,5 +117,35 @@ input[type="submit"] {
     padding-block: 0.5rem;
     margin-top: 1.5rem;
     align-self: flex-end;
+    cursor: pointer;
+}
+
+.error-message {
+    width: 100%;
+    background-color: hsla(var(--alert));
+    color: hsl(var(--alert-foreground));
+    font-weight: bold;
+    border-radius: 1rem;
+    padding-block: 1.5rem;
+    padding-inline: 3rem;
+    user-select: text;
+    -webkit-user-select: text;
+    margin-bottom: 0.5rem;
+    justify-content: space-between;
+    align-items: center;
+    display: none;
+}
+
+.error-message:has(.hide-toggle:checked) {
+    display: flex;
+}
+
+.hide-toggle {
+    display: none;
+}
+
+.hide-button {
+    height: min-content;
+    padding: 0.5rem;
     cursor: pointer;
 }
