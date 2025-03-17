@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+<!---->
+
+{% block title %} Rekisteröidy {% endblock %}
+
+<!---->
+
+{% block content %}
+<h1 class="title">Rekisteröidy</h1>
+<form class="auth-form" action="">
+    <div class="input-container">
+        <label for="username">Käyttäjätunnus</label>
+        <input type="text" name="username" id="username" />
+    </div>
+
+    <div class="input-container">
+        <label for="password">Salasana</label>
+        <input type="password" name="password" id="password" />
+    </div>
+
+    <input
+        type="text"
+        name="csrf_token"
+        id="csrf_token"
+        value="{{session.csrf_token}}"
+        hidden
+    />
+
+    <div class="input-container">
+        <input type="submit" value="Rekisteröidy" />
+    </div>
+</form>
+
+{% endblock %}

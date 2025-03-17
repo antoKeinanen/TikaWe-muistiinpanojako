@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/modern-normalize/modern-normalize.min.css"
+        />
+        <link
+            rel="stylesheet"
+            href="{{url_for('static', filename='style.css')}}"
+        />
+        <title>{% block title %} {% endblock %} – Muistiinpanojako</title>
+    </head>
+    <body>
+        <header>
+            <h1 class="logo">Muistiinpanojako</h1>
+        </header>
+        <main>{% block content %} {% endblock %}</main>
+    </body>
+</html>
