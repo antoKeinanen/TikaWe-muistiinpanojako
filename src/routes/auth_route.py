@@ -40,7 +40,11 @@ def signin_action():
 
     flask.session["token"] = user.token
 
-    next_page = flask.request.form.get("next", flask.url_for("index_page"))
+    next_page = flask.request.form.get("next")
+
+    if not next_page or not len(next_page):
+        next_page = flask.url_for("index_page")
+
     return flask.redirect(next_page)
 
 
@@ -64,7 +68,11 @@ def signup_action():
 
     flask.session["token"] = user.token
 
-    next_page = flask.request.form.get("next", flask.url_for("index_page"))
+    next_page = flask.request.form.get("next")
+
+    if not next_page or not len(next_page):
+        next_page = flask.url_for("index_page")
+
     return flask.redirect(next_page)
 
 
