@@ -1,6 +1,7 @@
 import sqlite3
 from werkzeug.security import generate_password_hash
 from models.user import User
+import util.database as db
 
 
 def create_user(username: str, plain_password: str):
@@ -9,30 +10,29 @@ def create_user(username: str, plain_password: str):
         method="scrypt:131072:8:1",
         salt_length=32,
     )
-    with sqlite3.connect("database.db") as connection:
-        try:
-            cursor = connection.cursor()
-            sql = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
-            cursor.execute(sql, [username, password_hash])
-        except sqlite3.IntegrityError:
-            return None, "Tunnus on jo varattu"
-        except sqlite3.Error as ex:
-            print(ex)
-            return None, "Odottamaton virhe tapahtui. Yritä myöhemmin uudelleen!"
-    return None, None
+
+    try:
+        sql_command = "INSERT INTO users (username, password_hash) VALUES (?, ?)"
+        db.db_execute(sql_command, [username, password_hash])
+        return None, None
+    except sqlite3.IntegrityError:
+        return None, "Käyttäjätunnus on jo varattu"
+    except sqlite3.Error as er:
+        print(er)
+        return None, "Odottamaton virhe tapahtui. Yritä myöhemmin uudelleen!"
 
 
 def get_user(username: str):
-    with sqlite3.connect("database.db") as connection:
-        try:
-            cursor = connection.cursor()
-            sql = "SELECT id, username, password_hash FROM users WHERE username = ?"
-            cursor.execute(sql, [username])
-            user = cursor.fetchone()
-
-            if not len(user):
-                return None, "Virheellinen käyttäjätunnus ja/tai salasana"
-            return User(*user), None
-        except sqlite3.Error as ex:
-            print(ex)
-            return None, "Odottamaton virhe tapahtui. Yritä myöhemmin uudelleen!"
+    try:
+        sql_command = """
+        SELECT id, username, password_hash
+        FROM users
+        WHERE username = ?;
+        """
+        user = db.db_fetch(sql_command, [username])
+        if not len(user):
+            return None, "Virheellinen käyttäjätunnus ja/tai salasana"
+        return User(*user[0]), None
+    except sqlite3.Error as er:
+        print(er)
+        return None, "Odottamaton virhe tapahtui. Yritä myöhemmin uudelleen!"
