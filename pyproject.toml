@@ -27,7 +27,6 @@ target-version = "py312"
 lint.ignore = [
     "I001",
     "D",
-    "T201",
     "D203",
     "D212",
     "PTH123",

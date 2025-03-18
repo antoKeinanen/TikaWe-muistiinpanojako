@@ -2,6 +2,7 @@ import sqlite3
 from werkzeug.security import generate_password_hash
 from models.user import User
 import util.database as db
+from util.logger import Logger
 
 
 def create_user(username: str, plain_password: str):
@@ -18,7 +19,7 @@ def create_user(username: str, plain_password: str):
     except sqlite3.IntegrityError:
         return None, "Käyttäjätunnus on jo varattu"
     except sqlite3.Error as er:
-        print(er)
+        Logger.error("Error creating user:", er)
         return None, "Odottamaton virhe tapahtui. Yritä myöhemmin uudelleen!"
 
 
@@ -34,5 +35,5 @@ def get_user(username: str):
             return None, "Virheellinen käyttäjätunnus ja/tai salasana"
         return User(*user[0]), None
     except sqlite3.Error as er:
-        print(er)
+        Logger.error("Error getting user:", er)
         return None, "Odottamaton virhe tapahtui. Yritä myöhemmin uudelleen!"
