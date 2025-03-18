@@ -18,3 +18,8 @@ app.add_url_rule(
     view_func=routes.auth_route.signup_action,
     methods=["POST"],
 )
+app.add_url_rule(
+    "/api/signin",
+    view_func=routes.auth_route.signin_action,
+    methods=["POST"],
+)

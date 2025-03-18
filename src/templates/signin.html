@@ -7,8 +7,26 @@
 <!---->
 
 {% block content %}
+
+<!---->
+
+{% for i, error in errors %}
+<div class="error-message">
+    <p>{{error}}</p>
+    <input
+        type="checkbox"
+        class="hide-toggle"
+        name="hide"
+        id="hide-{{i}}"
+        checked
+    />
+    <label class="hide-button" for="hide-{{i}}">X</label>
+</div>
+{% endfor %}
+
 <h1 class="title">Kirjaudu sisään</h1>
-<form class="auth-form" action="">
+
+<form class="auth-form" action="/api/signin" method="post">
     <div class="input-container">
         <label for="username">Käyttäjätunnus</label>
         <input type="text" name="username" id="username" />
