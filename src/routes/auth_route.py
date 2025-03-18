@@ -1,22 +1,23 @@
-import secrets
 import flask
 from services import auth_service
 from werkzeug.security import check_password_hash
 import re
+from decorators import csrf
 
 
+@csrf.setup
 def signin_page():
     errors = flask.get_flashed_messages(category_filter="error")
-    flask.session["csrf_token"] = secrets.token_hex(16)
     return flask.render_template("signin.html", errors=enumerate(errors))
 
 
+@csrf.setup
 def signup_page():
     errors = flask.get_flashed_messages(category_filter="error")
-    flask.session["csrf_token"] = secrets.token_hex(16)
     return flask.render_template("signup.html", errors=enumerate(errors))
 
 
+@csrf.validate("signin_page")
 def signin_action():
     errors = validate_credentials()
 
@@ -43,6 +44,7 @@ def signin_action():
     return flask.redirect(next_page)
 
 
+@csrf.validate("signup_page")
 def signup_action():
     errors = validate_credentials()
 
@@ -69,8 +71,6 @@ def signup_action():
 def validate_credentials():
     username = flask.request.form.get("username")
     password = flask.request.form.get("password")
-    client_csrf_token = flask.request.form.get("csrf_token")
-    server_csrf_token = flask.session.get("csrf_token")
 
     errors = []
 
@@ -92,12 +92,5 @@ def validate_credentials():
         or not re.compile(r"[a-zåäö]").search(password)
     ):
         errors.append("Salasanassa on oltava isoja ja pieniä kirjaimia")
-
-    if not client_csrf_token or not server_csrf_token:
-        errors.append("CSRF token puuttuu")
-        return errors
-
-    if client_csrf_token != server_csrf_token:
-        errors.append("CSRF tokenin validointi virhe")
 
     return errors
