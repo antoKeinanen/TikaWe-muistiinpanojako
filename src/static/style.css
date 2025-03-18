@@ -91,6 +91,12 @@ form {
     width: 50%;
 }
 
+.submit-container {
+    display: flex;
+    justify-content: space-between;
+    width: 50%;
+}
+
 input[type="text"],
 input[type="password"] {
     margin-bottom: 1rem;
@@ -115,7 +121,6 @@ input[type="submit"] {
     border-radius: 1rem;
     padding-inline: 1rem;
     padding-block: 0.5rem;
-    margin-top: 1.5rem;
     align-self: flex-end;
     cursor: pointer;
 }
@@ -126,8 +131,8 @@ input[type="submit"] {
     color: hsl(var(--alert-foreground));
     font-weight: bold;
     border-radius: 1rem;
-    padding-block: 1.5rem;
-    padding-inline: 3rem;
+    padding-block: 0.5rem;
+    padding-inline: 1rem;
     user-select: text;
     -webkit-user-select: text;
     margin-bottom: 0.5rem;

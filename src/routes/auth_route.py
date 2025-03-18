@@ -27,16 +27,19 @@ def signin_action():
     username = flask.request.form.get("username")
     plain_password = flask.request.form.get("password")
 
-    user, error = auth_service.get_user(username)
+    user, error = auth_service.get_user_by_username(username)
     if error:
         flask.flash(error, category="error")
         return flask.redirect(flask.url_for("signin_page"))
 
     if not check_password_hash(user.password_hash, plain_password):
-        flask.flash("Virheellinen käyttäjätunnus ja/tai salasana")
+        flask.flash("Virheellinen käyttäjätunnus ja/tai salasana", category="error")
         return flask.redirect(flask.url_for("signin_page"))
 
-    return flask.redirect(flask.url_for("index_page"))
+    flask.session["token"] = user.token
+
+    next_page = flask.request.form.get("next", flask.url_for("index_page"))
+    return flask.redirect(next_page)
 
 
 def signup_action():
@@ -50,13 +53,16 @@ def signup_action():
     username = flask.request.form.get("username")
     password = flask.request.form.get("password")
 
-    _, error = auth_service.create_user(username, password)
+    user, error = auth_service.create_user(username, password)
 
     if error:
         flask.flash(error, category="error")
         return flask.redirect(flask.url_for("signup_page"))
 
-    return flask.redirect(flask.url_for("index_page"))
+    flask.session["token"] = user.token
+
+    next_page = flask.request.form.get("next", flask.url_for("index_page"))
+    return flask.redirect(next_page)
 
 
 def validate_credentials():

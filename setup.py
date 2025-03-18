@@ -1,6 +1,9 @@
+from pathlib import Path
 import json
 import secrets
 import sqlite3
+
+Path("config.json").unlink(missing_ok=True)
 
 with open("config.json", "w") as file:
     config = {
@@ -10,6 +13,8 @@ with open("config.json", "w") as file:
 
 with open("init.sql") as file:
     db_init_script = file.read()
+
+Path("database.db").unlink(missing_ok=True)
 
 with sqlite3.connect("database.db") as db:
     cursor = db.cursor()
