@@ -2,6 +2,7 @@ import secrets
 import flask
 from services import auth_service
 from werkzeug.security import check_password_hash
+import re
 
 
 def signin_page():
@@ -75,9 +76,22 @@ def validate_credentials():
 
     if not username:
         errors.append("Käyttäjätunnus on pakollinen")
+    elif len(username) > 16:
+        errors.append("Käyttäjätunnus on liian pitkä")
+    elif len(username) < 3:
+        errors.append("Käyttäjätunnus on liian lyhyt")
 
     if not password:
         errors.append("Salasana on pakollinen")
+    elif len(password) < 8:
+        errors.append("Salasanassa on oltava vähintään 8 merkkiä")
+    elif len(password) > 255:
+        errors.append("Salasanan tulee olla alle 255 merkkiä pitkä")
+    elif not (
+        re.compile(r"[A-ZÅÄÖ]").search(password)
+        or not re.compile(r"[a-zåäö]").search(password)
+    ):
+        errors.append("Salasanassa on oltava isoja ja pieniä kirjaimia")
 
     if not client_csrf_token or not server_csrf_token:
         errors.append("CSRF token puuttuu")
