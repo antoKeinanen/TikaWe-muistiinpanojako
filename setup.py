@@ -14,4 +14,3 @@ with open("init.sql") as file:
 with sqlite3.connect("database.db") as db:
     cursor = db.cursor()
     cursor.executescript(db_init_script)
-        
