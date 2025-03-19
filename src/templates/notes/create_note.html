@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+<!---->
+
+{% block title %} Uusi muistiinpano {% endblock %}
+
+<!---->
+
+{% block content %}
+
+<!---->
+
+{% for i, error in errors %}
+<div class="error-message">
+    <p>{{error}}</p>
+    <input
+        type="checkbox"
+        class="hide-toggle"
+        name="hide"
+        id="hide-{{i}}"
+        checked
+    />
+    <label class="hide-button" for="hide-{{i}}">X</label>
+</div>
+{% endfor %}
+
+<h1>Luo uusi muistiinpano</h1>
+
+<form class="new-note-form" action="{{url_for('signin_action')}}" method="post">
+    <div class="input-container">
+        <label for="username">Otsikko</label>
+        <input type="text" name="title" id="title" />
+    </div>
+
+    <div class="textarea-container">
+        <label for="username">Muistiinpanot</label>
+        <textarea name="content" id="content" rows="24"></textarea>
+    </div>
+
+    <input
+        type="text"
+        name="csrf_token"
+        id="csrf_token"
+        value="{{session.csrf_token}}"
+        hidden
+    />
+
+    <div class="submit-container">
+        <input type="submit" value="Tallenna" />
+    </div>
+</form>
+
+{% endblock %}
