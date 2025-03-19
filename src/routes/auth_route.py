@@ -8,13 +8,13 @@ from decorators import csrf
 @csrf.setup
 def signin_page():
     errors = flask.get_flashed_messages(category_filter="error")
-    return flask.render_template("signin.html", errors=enumerate(errors))
+    return flask.render_template("auth/signin.html", errors=enumerate(errors))
 
 
 @csrf.setup
 def signup_page():
     errors = flask.get_flashed_messages(category_filter="error")
-    return flask.render_template("signup.html", errors=enumerate(errors))
+    return flask.render_template("auth/signup.html", errors=enumerate(errors))
 
 
 @csrf.validate("signin_page")
