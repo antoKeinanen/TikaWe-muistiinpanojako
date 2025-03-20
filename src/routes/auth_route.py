@@ -38,14 +38,15 @@ def signin_action():
         flask.flash("Virheellinen käyttäjätunnus ja/tai salasana", category="error")
         return flask.redirect(flask.url_for("signin_page"))
 
-    flask.session["token"] = user.token
-
     next_page = flask.request.form.get("next")
 
     if not next_page or not len(next_page):
         next_page = flask.url_for("index_page")
 
-    return flask.redirect(next_page)
+    response = flask.make_response(flask.redirect(next_page))
+    # Here you should also set secure to true if this was a real production application
+    response.set_cookie("Authorization", user.token, httponly=True, samesite="Strict")
+    return response
 
 
 @csrf.validate("signup_page")
@@ -66,14 +67,15 @@ def signup_action():
         flask.flash(error, category="error")
         return flask.redirect(flask.url_for("signup_page"))
 
-    flask.session["token"] = user.token
-
     next_page = flask.request.form.get("next")
 
     if not next_page or not len(next_page):
         next_page = flask.url_for("index_page")
 
-    return flask.redirect(next_page)
+    response = flask.make_response(flask.redirect(next_page))
+    # Here you should also set secure to true if this was a real production application
+    response.set_cookie("Authorization", user.token, httponly=True, samesite="Strict")
+    return response
 
 
 def validate_credentials():

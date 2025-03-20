@@ -8,7 +8,7 @@ from util.logger import Logger
 def login_required(f: Callable):
     @wraps(f)
     def decorated_function(*args: tuple, **kwargs: dict) -> flask.Response:
-        token = flask.session.get("token")
+        token = flask.request.cookies.get("Authorization")
         if not token:
             return flask.redirect(flask.url_for("signin_page", next=flask.request.url))
 
@@ -17,7 +17,8 @@ def login_required(f: Callable):
             Logger.error("Login required decorator failed to get user by token:", error)
             return flask.redirect(flask.url_for("signin_page", next=flask.request.url))
 
-        args = (user, *args)
+        flask.session.user = user
+
         return f(*args, **kwargs)
 
     return decorated_function
