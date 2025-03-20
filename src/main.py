@@ -13,6 +13,7 @@ app.add_url_rule("/", view_func=routes.index_route.index_page)
 app.add_url_rule("/signup", view_func=routes.auth_route.signup_page)
 app.add_url_rule("/signin", view_func=routes.auth_route.signin_page)
 app.add_url_rule("/note/create", view_func=routes.note_route.create_note_page)
+app.add_url_rule("/note/<int:note_id>", view_func=routes.note_route.view_note_page)
 
 app.add_url_rule(
     "/api/signup",

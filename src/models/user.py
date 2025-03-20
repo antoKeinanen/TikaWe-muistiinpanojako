@@ -5,5 +5,5 @@ from dataclasses import dataclass
 class User:
     id: int
     username: str
-    password_hash: str
-    token: str
+    password_hash: str | None = None
+    token: str | None = None

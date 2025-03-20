@@ -17,7 +17,7 @@ def login_required(f: Callable):
             Logger.error("Login required decorator failed to get user by token:", error)
             return flask.redirect(flask.url_for("signin_page", next=flask.request.url))
 
-        flask.session.user = user
+        flask.request.user = user
 
         return f(*args, **kwargs)
 

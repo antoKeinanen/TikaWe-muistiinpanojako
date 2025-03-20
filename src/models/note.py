@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from models.user import User
 
 
 @dataclass
@@ -7,3 +8,4 @@ class Note:
     title: str
     content: str
     user_id: str
+    user: User | None = None

@@ -2,7 +2,11 @@ import flask
 from decorators import csrf
 from decorators.login_required import login_required
 from services import note_service
-from pathlib import Path
+from util.logger import Logger
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from models.user import User
 
 
 @login_required
@@ -10,6 +14,23 @@ from pathlib import Path
 def create_note_page():
     errors = flask.get_flashed_messages(category_filter="error")
     return flask.render_template("notes/create_note.html", errors=enumerate(errors))
+
+
+@login_required
+def view_note_page(note_id: int):
+    note, error = note_service.get_note_by_id(note_id, join_user=True)
+    Logger.log(note)
+    if error:
+        Logger.error(error)
+        return flask.redirect(flask.url_for("index_page"))
+
+    user: User = flask.request.user
+
+    return flask.render_template(
+        "notes/view_note.html",
+        note=note,
+        is_creator=user.id == note.user_id,
+    )
 
 
 @login_required
@@ -25,7 +46,7 @@ def create_note_action():
     title = flask.request.form.get("title")
     content = flask.request.form.get("content")
 
-    user = flask.session.user
+    user: User = flask.request.user
 
     new_note, error = note_service.create_note(title, content, user.id)
 
@@ -33,8 +54,7 @@ def create_note_action():
         flask.flash(error, category="error")
         return flask.redirect(flask.url_for("create_note_page"))
 
-    next_url = Path(flask.url_for("create_note_page"), str(new_note.id))
-
+    next_url = flask.url_for("view_note_page", note_id=new_note.id)
     return flask.redirect(next_url)
 
 
