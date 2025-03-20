@@ -11,7 +11,7 @@ with open("config.json", "w") as file:
     }
     json.dump(config, file)
 
-with open("init.sql") as file:
+with open("scripts/sql/init.sql") as file:
     db_init_script = file.read()
 
 Path("database.db").unlink(missing_ok=True)

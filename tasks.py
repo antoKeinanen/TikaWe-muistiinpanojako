@@ -1,4 +1,6 @@
 import invoke
+import sys
+from src.util.logger import Logger
 
 
 @invoke.task(optional=["check"])
@@ -30,7 +32,7 @@ def start(c: invoke.Context, *, debug: bool = False):
 
 @invoke.task
 def setup(c: invoke.Context):
-    command = "python setup.py"
+    command = "python scripts/setup.py"
     c.run(command)
 
 
@@ -44,3 +46,23 @@ def setup_hooks(c: invoke.Context):
 def pre_commit(c: invoke.Context):
     command = "pre-commit run --all-files"
     c.run(command)
+
+
+@invoke.task(setup)
+def seed_test(c: invoke.context):
+    command = "python scripts/seed_test.py"
+    c.run(command)
+
+
+@invoke.task(seed_test)
+def test(c: invoke.Context):
+    result = input("Warning! This will reset the database. Is this ok? [Y/n]: ").lower()
+
+    if len(result) > 0 and not result.startswith("y"):
+        Logger.log("Cancelled!")
+        sys.exit()
+
+    command = "pytest"
+    c.run(command)
+
+    setup(c)
