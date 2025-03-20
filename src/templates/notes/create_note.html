@@ -26,7 +26,11 @@
 
 <h1>Luo uusi muistiinpano</h1>
 
-<form class="new-note-form" action="{{url_for('signin_action')}}" method="post">
+<form
+    class="new-note-form"
+    action="{{url_for('create_note_action')}}"
+    method="post"
+>
     <div class="input-container">
         <label for="username">Otsikko</label>
         <input type="text" name="title" id="title" />

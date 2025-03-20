@@ -5,6 +5,7 @@ def db_execute(sql_command: str, arguments: list | None = None):
     with sqlite3.connect("database.db") as connection:
         cursor = connection.cursor()
         cursor.execute(sql_command, arguments)
+        return cursor.lastrowid
 
 
 def db_fetch(sql_command: str, arguments: list | None = None, size: int = 1):
