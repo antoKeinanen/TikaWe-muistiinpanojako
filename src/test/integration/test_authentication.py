@@ -87,11 +87,25 @@ class TestAuthentication(unittest.TestCase):
         driver = self.driver
         driver.get("http://localhost:5000/signup")
 
-        driver.find_element(By.ID, "username").send_keys("user2")
+        driver.find_element(By.ID, "username").send_keys("user99")
         driver.find_element(By.ID, "password").send_keys("Password312")
         driver.find_element(By.CSS_SELECTOR, "[type='submit']").click()
 
         self.assertIsNotNone(driver.get_cookie("Authorization"))
+
+    def test_signup_fails_user_exists(self):
+        driver = self.driver
+        driver.get("http://localhost:5000/signup")
+
+        driver.find_element(By.ID, "username").send_keys("user2")
+        driver.find_element(By.ID, "password").send_keys("Password312")
+        driver.find_element(By.CSS_SELECTOR, "[type='submit']").click()
+
+        self.assertIsNone(driver.get_cookie("Authorization"))
+        errors = [
+            e.text for e in driver.find_elements(By.CLASS_NAME, "error-description")
+        ]
+        self.assertIn("Käyttäjätunnus on jo varattu", errors)
 
     def test_signup_fails_no_username(self):
         driver = self.driver
