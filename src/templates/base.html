@@ -15,7 +15,16 @@
     </head>
     <body>
         <header>
-            <h1 class="logo">Muistiinpanojako</h1>
+            <a href="/"><h1 class="logo">Muistiinpanojako</h1></a>
+            <div class="links">
+                {% if session["signed_in"] %}
+                <a href="/note/create">Uusi muistiinpano</a>
+                <a href="/signout">Kirjaudu ulos</a>
+                {% else %}
+                <a href="/signup">Rekisteröidy</a>
+                <a href="/signin">Kirjaudu sisään</a>
+                {% endif %}
+            </div>
         </header>
         <main>{% block content %} {% endblock %}</main>
     </body>

@@ -44,6 +44,10 @@ body {
     -webkit-user-select: none;
 }
 
+* {
+    transition: all 150ms linear;
+}
+
 header {
     border-bottom: 1px solid hsl(var(--muted-foreground));
     padding-block: 1rem;
@@ -51,6 +55,18 @@ header {
     position: sticky;
     top: 0px;
     background-color: hsl(var(--background));
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+a {
+    color: hsl(var(--primary));
+}
+
+a:has(.logo) {
+    color: hsl(var(--foreground));
+    text-decoration: none;
 }
 
 .logo {
@@ -191,4 +207,20 @@ input[type="submit"] {
     border-radius: 1rem;
     padding-inline: 1rem;
     padding-block: 0.5rem;
+}
+
+.links {
+    display: flex;
+    gap: 1rem;
+    font-size: 1.125rem;
+    color: hsl(var(--foreground));
+
+    & > a {
+        color: hsl(var(--foreground));
+        text-decoration: none;
+
+        &:hover {
+            color: hsl(var(--primary));
+        }
+    }
 }

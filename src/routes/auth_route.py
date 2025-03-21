@@ -7,12 +7,26 @@ from decorators import csrf
 
 @csrf.setup
 def signin_page():
+    if flask.session.get("signed_in"):
+        next_page = flask.request.form.get("next")
+
+        if not next_page or not len(next_page):
+            next_page = flask.url_for("index_page")
+        return flask.redirect(next_page)
+
     errors = flask.get_flashed_messages(category_filter="error")
     return flask.render_template("auth/signin.html", errors=enumerate(errors))
 
 
 @csrf.setup
 def signup_page():
+    if flask.session.get("signed_in"):
+        next_page = flask.request.form.get("next")
+
+        if not next_page or not len(next_page):
+            next_page = flask.url_for("index_page")
+        return flask.redirect(next_page)
+
     errors = flask.get_flashed_messages(category_filter="error")
     return flask.render_template("auth/signup.html", errors=enumerate(errors))
 
@@ -75,6 +89,15 @@ def signup_action():
     response = flask.make_response(flask.redirect(next_page))
     # Here you should also set secure to true if this was a real production application
     response.set_cookie("Authorization", user.token, httponly=True, samesite="Strict")
+    return response
+
+
+def signout_action():
+    flask.session["signed_in"] = False
+    response = flask.make_response(
+        flask.redirect(flask.url_for("signin_page")),
+    )
+    response.set_cookie("Authorization", "")
     return response
 
 
