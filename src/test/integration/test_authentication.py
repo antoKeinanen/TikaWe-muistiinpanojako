@@ -1,6 +1,7 @@
 import unittest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from time import sleep
 
 
 class TestAuthentication(unittest.TestCase):
@@ -19,6 +20,8 @@ class TestAuthentication(unittest.TestCase):
         driver.find_element(By.ID, "username").send_keys("user1")
         driver.find_element(By.ID, "password").send_keys("Password123")
         driver.find_element(By.CSS_SELECTOR, "[type='submit']").click()
+
+        sleep(0.5)
 
         self.assertIsNotNone(driver.get_cookie("Authorization"))
 
@@ -90,6 +93,8 @@ class TestAuthentication(unittest.TestCase):
         driver.find_element(By.ID, "username").send_keys("user99")
         driver.find_element(By.ID, "password").send_keys("Password312")
         driver.find_element(By.CSS_SELECTOR, "[type='submit']").click()
+
+        sleep(0.5)
 
         self.assertIsNotNone(driver.get_cookie("Authorization"))
 
@@ -167,3 +172,14 @@ class TestAuthentication(unittest.TestCase):
         ]
 
         self.assertIn("CSRF tokenin validointi virhe", errors)
+
+    def test_authenticated_shows_nav_logout(self):
+        driver = self.driver
+        driver.get("http://localhost:5000/")
+        driver.add_cookie({"name": "Authorization", "value": "USER_1_TOKEN"})
+
+        driver.get("http://localhost:5000/")
+
+        navbar = [n.text for n in driver.find_elements(By.CSS_SELECTOR, ".links > a")]
+
+        self.assertIn("Kirjaudu ulos", navbar)

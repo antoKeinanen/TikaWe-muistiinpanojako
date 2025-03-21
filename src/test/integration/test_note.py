@@ -1,6 +1,7 @@
 import unittest
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from time import sleep
 
 
 class TestNote(unittest.TestCase):
@@ -42,5 +43,15 @@ class TestNote(unittest.TestCase):
             "Here is a lot of text!! \n Another line too"
         )
         driver.find_element(By.CSS_SELECTOR, "[type='submit']").click()
+
+        sleep(0.5)
+
+        content_container = driver.find_element(By.CLASS_NAME, "content-container")
+        self.assertIn(
+            "Here is a lot of text!! \n Another line too",
+            content_container.text,
+        )
+
+        self.assertRegex(driver.current_url, r"http://localhost:5000/note/[0-9]+")
 
         self.assertIn("Test note", driver.title)
