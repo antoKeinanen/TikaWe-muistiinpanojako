@@ -59,3 +59,26 @@ def get_note_by_id(note_id: int, *, join_user: bool = False):
     except sqlite3.Error as er:
         Logger.error("Failed to create new note: ", er)
         return None, "Odottamaton virhe tapahtui. Yritä myöhemmin uudelleen!"
+
+
+def get_recent_notes(limit: int = 10, offset: int = 0):
+    sql_command = """
+    SELECT
+        notes.id AS note_id,
+        notes.title,
+        notes.content,
+        users.id AS user_id,
+        users.username
+    FROM notes
+    JOIN users ON notes.user_id = users.id
+    ORDER BY notes.created_at DESC
+    LIMIT ?
+    OFFSET ?
+
+    """
+    try:
+        notes = [Note(*note) for note in db.db_fetch_all(sql_command, [limit, offset])]
+        return notes, None
+    except sqlite3.Error as er:
+        Logger.error("Failed to get latest notes: ", er)
+        return [], "Odottamaton virhe tapahtui, Yritä myöhemmin uudelleen!"

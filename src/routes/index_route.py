@@ -1,7 +1,9 @@
-from flask import render_template
+import flask
 from decorators.login_required import login_required
+from services import note_service
 
 
 @login_required
 def index_page():
-    return render_template("index.html")
+    notes, error = note_service.get_recent_notes()
+    return flask.render_template("index.html", notes=notes)

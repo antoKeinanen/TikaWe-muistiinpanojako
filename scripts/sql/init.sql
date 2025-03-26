@@ -12,6 +12,8 @@ CREATE TABLE
         title TEXT NOT NULL,
         content TEXT NOT NULL,
         user_id INTEGER NOT NULL,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+
         FOREIGN KEY (user_id) 
             REFERENCES users (user_id) 
             ON UPDATE CASCADE 

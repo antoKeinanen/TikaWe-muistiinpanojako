@@ -7,5 +7,27 @@
 <!---->
 
 {% block content %}
-<h1>Hello!</h1>
+<!---->
+{% if notes %}
+<div class="note-card-container">
+    {% for note in notes %}
+
+    <a href="/note/{{note.id}}">
+        <div class="note-card">
+            <p class="note-card-title">{{note.title}}</p>
+            <p class="note-card-author">Kirjoittanut: {{note.user}}</p>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+{% else %}
+<div class="not-found-container">
+    <p class="not-found-title">Täällä on toistaiseksi vielä tyhjää!</p>
+    <a href="/note/create">
+        <button>Luo uusi muistiinpano</button>
+    </a>
+</div>
+{% endif %}
+<!---->
+
 {% endblock %}
