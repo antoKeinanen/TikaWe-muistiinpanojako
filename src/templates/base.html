@@ -3,10 +3,23 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+            rel="stylesheet"
+        />
+
         <link
             rel="stylesheet"
-            href="https://cdn.jsdelivr.net/npm/modern-normalize/modern-normalize.min.css"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"
         />
+
+        <link
+            rel="stylesheet"
+            href="{{url_for('static', filename='preflight.css')}}"
+        />
+
         <link
             rel="stylesheet"
             href="{{url_for('static', filename='style.css')}}"
@@ -14,18 +27,30 @@
         <title>{% block title %} {% endblock %} – Muistiinpanojako</title>
     </head>
     <body>
-        <header>
-            <a href="/"><h1 class="logo">Muistiinpanojako</h1></a>
-            <div class="links">
-                {% if session["signed_in"] %}
-                <a href="/note/create">Uusi muistiinpano</a>
-                <a href="/signout">Kirjaudu ulos</a>
-                {% else %}
-                <a href="/signup">Rekisteröidy</a>
-                <a href="/signin">Kirjaudu sisään</a>
-                {% endif %}
-            </div>
+        <header class="navigation-bar">
+            <nav class="navigation-bar__content">
+                <a href="/">
+                    <p class="navigation-bar__logo">Muistiinpanojako</p></a
+                >
+                <ul class="navigation-bar__links">
+                    {% if session["signed_in"] %}
+                    <li class="navigation-bar__link">
+                        <a href="/note/create">Uusi muistiinpano</a>
+                    </li>
+                    <li class="navigation-bar__link">
+                        <a href="/signout">Kirjaudu ulos</a>
+                    </li>
+                    {% else %}
+                    <li class="navigation-bar__link">
+                        <a href="/signup">Rekisteröidy</a>
+                    </li>
+                    <li class="navigation-bar__link">
+                        <a href="/signin">Kirjaudu sisään</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
         </header>
-        <main>{% block content %} {% endblock %}</main>
+        <main class="main-content">{% block content %} {% endblock %}</main>
     </body>
 </html>

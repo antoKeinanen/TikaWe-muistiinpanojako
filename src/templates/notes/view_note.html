@@ -10,9 +10,10 @@
 
 <!---->
 
-<h1>{{note.title}}</h1>
-<p>Kirjoittanut: {{note.user.username}}</p>
-<br />
-<div class="content-container" disabled rows="24">{{note.content}}</div>
+<section class="view-note">
+    <h1 class="view-note__heading">{{note.title}}</h1>
+    <p class="view-note__author">{{note.user.username}}</p>
+    <div class="view-note__content" disabled rows="24">{{note.content}}</div>
+</section>
 
 {% endblock %}

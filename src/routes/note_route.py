@@ -13,7 +13,11 @@ if TYPE_CHECKING:
 @csrf.setup
 def create_note_page():
     errors = flask.get_flashed_messages(category_filter="error")
-    return flask.render_template("notes/create_note.html", errors=enumerate(errors))
+    return flask.render_template(
+        "notes/create_note.html",
+        errors=enumerate(errors),
+        error_count=len(errors),
+    )
 
 
 @login_required

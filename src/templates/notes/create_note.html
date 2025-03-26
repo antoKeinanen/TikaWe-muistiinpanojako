@@ -10,48 +10,68 @@
 
 <!---->
 
-{% for i, error in errors %}
-<div class="error-message">
-    <p>{{error}}</p>
-    <input
-        type="checkbox"
-        class="hide-toggle"
-        name="hide"
-        id="hide-{{i}}"
-        checked
-    />
-    <label class="hide-button" for="hide-{{i}}">X</label>
+<div class="error__container">
+    {% for i, error in errors %}
+    <div class="error" style="--index: {{i}}; --error-count: {{error_count}}">
+        <p class="error__description">{{error}}</p>
+        <input
+            type="checkbox"
+            class="error__checkbox"
+            name="hide"
+            id="hide-{{i}}"
+            checked
+        />
+        <label class="error__close" for="hide-{{i}}">
+            <i class="fa-solid fa-xmark"></i>
+        </label>
+    </div>
+    {% endfor %}
 </div>
-{% endfor %}
+<div class="card__container">
+    <section class="note__card card">
+        <h1 class="card__heading">Luo uusi muistiinpano</h1>
+        <p class="card_subtext">&nbsp;</p>
 
-<h1>Luo uusi muistiinpano</h1>
+        <form
+            class="note__form"
+            action="{{url_for('create_note_action')}}"
+            method="post"
+        >
+            <div class="input__container">
+                <label for="username">Otsikko</label>
+                <input
+                    class="input__text"
+                    type="text"
+                    name="title"
+                    id="title"
+                />
+            </div>
 
-<form
-    class="new-note-form"
-    action="{{url_for('create_note_action')}}"
-    method="post"
->
-    <div class="input-container">
-        <label for="username">Otsikko</label>
-        <input type="text" name="title" id="title" />
-    </div>
+            <div class="input__container">
+                <label for="username">Muistiinpanot</label>
+                <textarea
+                    class="input__text"
+                    name="content"
+                    id="content"
+                    rows="24"
+                ></textarea>
+            </div>
 
-    <div class="textarea-container">
-        <label for="username">Muistiinpanot</label>
-        <textarea name="content" id="content" rows="24"></textarea>
-    </div>
+            <input
+                type="text"
+                name="csrf_token"
+                id="csrf_token"
+                value="{{session.csrf_token}}"
+                hidden
+            />
 
-    <input
-        type="text"
-        name="csrf_token"
-        id="csrf_token"
-        value="{{session.csrf_token}}"
-        hidden
-    />
-
-    <div class="submit-container">
-        <input type="submit" value="Tallenna" />
-    </div>
-</form>
+            <input
+                class="button button__right"
+                type="submit"
+                value="Tallenna"
+            />
+        </form>
+    </section>
+</div>
 
 {% endblock %}

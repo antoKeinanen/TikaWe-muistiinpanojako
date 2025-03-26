@@ -2,7 +2,7 @@
 
 <!---->
 
-{% block title %} Rekisteröidy {% endblock %}
+{% block title %} Kirjaudu sisään {% endblock %}
 
 <!---->
 
@@ -10,57 +10,88 @@
 
 <!---->
 
-{% for i, error in errors %}
-<div class="error-message">
-    <p class="error-description">{{error}}</p>
-    <input
-        type="checkbox"
-        class="hide-toggle"
-        name="hide"
-        id="hide-{{i}}"
-        checked
-    />
-    <label class="hide-button" for="hide-{{i}}">X</label>
+<div class="error__container">
+    {% for i, error in errors %}
+    <div class="error" style="--index: {{i}}; --error-count: {{error_count}}">
+        <p class="error__description">{{error}}</p>
+        <input
+            type="checkbox"
+            class="error__checkbox"
+            name="hide"
+            id="hide-{{i}}"
+            checked
+        />
+        <label class="error__close" for="hide-{{i}}">
+            <i class="fa-solid fa-xmark"></i>
+        </label>
+    </div>
+    {% endfor %}
 </div>
-{% endfor %}
 
-<h1 class="title">Rekisteröidy</h1>
+<div class="card__container">
+    <section class="card auth__content">
+        <h1 class="card__heading">Mukava tavata!</h1>
+        <p class="card__subtext">Rekisteröidy Muistiinpanojaon käyttäjäksi</p>
 
-<form class="auth-form" action="{{url_for('signup_action')}}" method="post">
-    <div class="input-container">
-        <label for="username">Käyttäjätunnus</label>
-        <input type="text" name="username" id="username" />
-    </div>
-
-    <div class="input-container">
-        <label for="password">Salasana</label>
-        <input type="password" name="password" id="password" />
-    </div>
-
-    <input
-        type="text"
-        name="csrf_token"
-        id="csrf_token"
-        value="{{session.csrf_token}}"
-        hidden
-    />
-
-    <input
-        type="text"
-        name="next"
-        id="next"
-        value="{{request.args.get('next', '')}}"
-        hidden
-    />
-
-    <div class="submit-container">
-        <a
-            href="{{url_for('signup_page')}}?next={{request.args.get('next', '')}}"
+        <form
+            class="auth__form"
+            action="{{url_for('signup_action')}}"
+            method="post"
         >
-            Kirjaudu sisään
-        </a>
-        <input type="submit" value="Rekisteröidy" />
-    </div>
-</form>
+            <div class="input__container">
+                <label class="input__label" for="username">
+                    Käyttäjätunnus
+                </label>
+                <input
+                    class="input__text"
+                    type="text"
+                    name="username"
+                    id="username"
+                />
+            </div>
 
+            <div class="input__container">
+                <label class="input__label" for="password">
+                    Salasana
+                </label>
+                <input
+                    class="input__text"
+                    type="password"
+                    name="password"
+                    id="password"
+                />
+            </div>
+
+            <input
+                type="text"
+                name="csrf_token"
+                id="csrf_token"
+                value="{{session.csrf_token}}"
+                hidden
+            />
+
+            <input
+                type="text"
+                name="next"
+                id="next"
+                value="{{request.args.get('next', '')}}"
+                hidden
+            />
+
+            <input
+                class="button button__wide auth__button"
+                type="submit"
+                value="Rekisteröidy"
+            />
+
+            <a
+                href="{{url_for('signup_page')}}?next={{request.args.get('next', '')}}"
+                class="auth__swap"
+            >
+                Onko sinulla jo käyttäjä?
+                <span class="link">Kirjaudu sisään!</span>
+            </a>
+        </form>
+    </section>
+</div>
 {% endblock %}
