@@ -8,7 +8,7 @@ class TestAuthentication(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Chrome()
         self.driver.implicitly_wait(1)
-        self.driver.timeouts.page_load = 1
+        self.driver.timeouts.page_load = 2
 
     def tearDown(self):
         self.driver.close()
@@ -33,10 +33,13 @@ class TestAuthentication(unittest.TestCase):
         driver.find_element(By.ID, "password").send_keys("Password123")
         driver.find_element(By.CSS_SELECTOR, "[type='submit']").click()
 
+        sleep(0.5)
+
         self.assertIsNone(driver.get_cookie("Authorization"))
         errors = [
-            e.text for e in driver.find_elements(By.CLASS_NAME, "error-description")
+            e.text for e in driver.find_elements(By.CLASS_NAME, "error__description")
         ]
+
         self.assertIn("Käyttäjätunnus on pakollinen", errors)
 
     def test_signin_fails_no_password(self):
@@ -46,9 +49,11 @@ class TestAuthentication(unittest.TestCase):
         driver.find_element(By.ID, "username").send_keys("user1")
         driver.find_element(By.CSS_SELECTOR, "[type='submit']").click()
 
+        sleep(0.5)
+
         self.assertIsNone(driver.get_cookie("Authorization"))
         errors = [
-            e.text for e in driver.find_elements(By.CLASS_NAME, "error-description")
+            e.text for e in driver.find_elements(By.CLASS_NAME, "error__description")
         ]
         self.assertIn("Salasana on pakollinen", errors)
 
@@ -62,9 +67,11 @@ class TestAuthentication(unittest.TestCase):
 
         driver.find_element(By.CSS_SELECTOR, "[type='submit']").click()
 
+        sleep(0.5)
+
         self.assertIsNone(driver.get_cookie("Authorization"))
         errors = [
-            e.text for e in driver.find_elements(By.CLASS_NAME, "error-description")
+            e.text for e in driver.find_elements(By.CLASS_NAME, "error__description")
         ]
 
         self.assertIn("CSRF token puuttuu", errors)
@@ -79,9 +86,11 @@ class TestAuthentication(unittest.TestCase):
 
         driver.find_element(By.CSS_SELECTOR, "[type='submit']").click()
 
+        sleep(0.5)
+
         self.assertIsNone(driver.get_cookie("Authorization"))
         errors = [
-            e.text for e in driver.find_elements(By.CLASS_NAME, "error-description")
+            e.text for e in driver.find_elements(By.CLASS_NAME, "error__description")
         ]
 
         self.assertIn("CSRF tokenin validointi virhe", errors)
@@ -94,7 +103,7 @@ class TestAuthentication(unittest.TestCase):
         driver.find_element(By.ID, "password").send_keys("Password312")
         driver.find_element(By.CSS_SELECTOR, "[type='submit']").click()
 
-        sleep(0.5)
+        sleep(2)
 
         self.assertIsNotNone(driver.get_cookie("Authorization"))
 
@@ -106,9 +115,11 @@ class TestAuthentication(unittest.TestCase):
         driver.find_element(By.ID, "password").send_keys("Password312")
         driver.find_element(By.CSS_SELECTOR, "[type='submit']").click()
 
+        sleep(1)
+
         self.assertIsNone(driver.get_cookie("Authorization"))
         errors = [
-            e.text for e in driver.find_elements(By.CLASS_NAME, "error-description")
+            e.text for e in driver.find_elements(By.CLASS_NAME, "error__description")
         ]
         self.assertIn("Käyttäjätunnus on jo varattu", errors)
 
@@ -120,9 +131,11 @@ class TestAuthentication(unittest.TestCase):
         driver.find_element(By.ID, "password").send_keys("Password123")
         driver.find_element(By.CSS_SELECTOR, "[type='submit']").click()
 
+        sleep(0.5)
+
         self.assertIsNone(driver.get_cookie("Authorization"))
         errors = [
-            e.text for e in driver.find_elements(By.CLASS_NAME, "error-description")
+            e.text for e in driver.find_elements(By.CLASS_NAME, "error__description")
         ]
         self.assertIn("Käyttäjätunnus on pakollinen", errors)
 
@@ -133,9 +146,11 @@ class TestAuthentication(unittest.TestCase):
         driver.find_element(By.ID, "username").send_keys("user1")
         driver.find_element(By.CSS_SELECTOR, "[type='submit']").click()
 
+        sleep(0.5)
+
         self.assertIsNone(driver.get_cookie("Authorization"))
         errors = [
-            e.text for e in driver.find_elements(By.CLASS_NAME, "error-description")
+            e.text for e in driver.find_elements(By.CLASS_NAME, "error__description")
         ]
         self.assertIn("Salasana on pakollinen", errors)
 
@@ -149,9 +164,11 @@ class TestAuthentication(unittest.TestCase):
 
         driver.find_element(By.CSS_SELECTOR, "[type='submit']").click()
 
+        sleep(0.5)
+
         self.assertIsNone(driver.get_cookie("Authorization"))
         errors = [
-            e.text for e in driver.find_elements(By.CLASS_NAME, "error-description")
+            e.text for e in driver.find_elements(By.CLASS_NAME, "error__description")
         ]
 
         self.assertIn("CSRF token puuttuu", errors)
@@ -166,9 +183,11 @@ class TestAuthentication(unittest.TestCase):
 
         driver.find_element(By.CSS_SELECTOR, "[type='submit']").click()
 
+        sleep(0.5)
+
         self.assertIsNone(driver.get_cookie("Authorization"))
         errors = [
-            e.text for e in driver.find_elements(By.CLASS_NAME, "error-description")
+            e.text for e in driver.find_elements(By.CLASS_NAME, "error__description")
         ]
 
         self.assertIn("CSRF tokenin validointi virhe", errors)
@@ -180,6 +199,12 @@ class TestAuthentication(unittest.TestCase):
 
         driver.get("http://localhost:5000/")
 
-        navbar = [n.text for n in driver.find_elements(By.CSS_SELECTOR, ".links > a")]
+        navbar = [
+            n.text
+            for n in driver.find_elements(
+                By.CSS_SELECTOR,
+                ".navigation-bar__link > a",
+            )
+        ]
 
         self.assertIn("Kirjaudu ulos", navbar)

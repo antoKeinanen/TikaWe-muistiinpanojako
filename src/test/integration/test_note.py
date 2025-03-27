@@ -46,7 +46,7 @@ class TestNote(unittest.TestCase):
 
         sleep(0.5)
 
-        content_container = driver.find_element(By.CLASS_NAME, "content-container")
+        content_container = driver.find_element(By.CLASS_NAME, "view-note__content")
         self.assertIn(
             "Here is a lot of text!! \n Another line too",
             content_container.text,
