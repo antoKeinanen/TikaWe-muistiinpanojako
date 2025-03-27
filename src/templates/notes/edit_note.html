@@ -29,12 +29,12 @@
 </div>
 <div class="card__container">
     <section class="note__card card">
-        <h1 class="card__heading">Luo uusi muistiinpano</h1>
+        <h1 class="card__heading">Muokkaa muistiinpanoa</h1>
         <p class="card_subtext">&nbsp;</p>
 
         <form
             class="note__form"
-            action="{{url_for('create_note_action')}}"
+            action="{{url_for('update_note_action', note_id=note.id)}}"
             method="post"
         >
             <div class="input__container">
@@ -44,6 +44,7 @@
                     type="text"
                     name="title"
                     id="title"
+                    value="{{note.title}}"
                 />
             </div>
 
@@ -54,7 +55,10 @@
                     name="content"
                     id="content"
                     rows="24"
-                ></textarea>
+                    wrap="hard"
+                >
+{{note.content}}</textarea
+                >
             </div>
 
             <input

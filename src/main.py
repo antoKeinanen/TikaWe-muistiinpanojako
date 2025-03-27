@@ -15,6 +15,7 @@ app.add_url_rule("/signin", view_func=routes.auth_route.signin_page)
 app.add_url_rule("/signout", view_func=routes.auth_route.signout_action)
 app.add_url_rule("/note/create", view_func=routes.note_route.create_note_page)
 app.add_url_rule("/note/<int:note_id>", view_func=routes.note_route.view_note_page)
+app.add_url_rule("/note/<int:note_id>/edit", view_func=routes.note_route.edit_note_page)
 
 app.add_url_rule(
     "/api/signup",
@@ -29,5 +30,15 @@ app.add_url_rule(
 app.add_url_rule(
     "/api/note/new",
     view_func=routes.note_route.create_note_action,
+    methods=["POST"],
+)
+app.add_url_rule(
+    "/api/note/<int:note_id>/update",
+    view_func=routes.note_route.update_note_action,
+    methods=["POST"],
+)
+app.add_url_rule(
+    "/api/note/<int:note_id>/delete",
+    view_func=routes.note_route.delete_note_action,
     methods=["POST"],
 )

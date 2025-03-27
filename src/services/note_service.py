@@ -45,7 +45,7 @@ def get_note_by_id(note_id: int, *, join_user: bool = False):
     try:
         note = db.db_fetch(sql_command, [note_id])
         if not len(note):
-            return None, f"Could not find note by the id {note_id}"
+            return None, "Muistiinpanoa ei löydetty"
 
         note = note[0]
         user = None
@@ -58,6 +58,34 @@ def get_note_by_id(note_id: int, *, join_user: bool = False):
 
     except sqlite3.Error as er:
         Logger.error("Failed to create new note: ", er)
+        return None, "Odottamaton virhe tapahtui. Yritä myöhemmin uudelleen!"
+
+
+def update_note_by_id(note_id: int, title: str, content: str):
+    sql_command = """
+    UPDATE notes
+    SET
+        title = ?,
+        content = ?
+    WHERE id = ?;
+    """
+
+    try:
+        db.db_execute(sql_command, [title, content, note_id])
+        return None, None
+    except sqlite3.Error as er:
+        Logger.error("Failed to delete note:", er)
+        return None, "Odottamaton virhe tapahtui. Yritä myöhemmin uudelleen!"
+
+
+def delete_note_by_id(note_id: int):
+    sql_command = "DELETE FROM notes WHERE id = ?"
+
+    try:
+        db.db_execute(sql_command, [note_id])
+        return None, None
+    except sqlite3.Error as er:
+        Logger.error("Failed to update note:", er)
         return None, "Odottamaton virhe tapahtui. Yritä myöhemmin uudelleen!"
 
 

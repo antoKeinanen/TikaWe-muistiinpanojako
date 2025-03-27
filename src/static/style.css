@@ -181,19 +181,29 @@ a {
     opacity: 80%;
 }
 
-.button__wide {
+.button--wide {
     width: 100%;
 }
 
-.button__large {
+.button--large {
     font-size: 1.25rem;
     padding: 0.75rem 1rem;
 }
 
-.button__right {
+.button--right {
     float: right;
     align-self: flex-end;
     justify-self: flex-end;
+}
+
+.button--destructive {
+    background-color: var(--destructive);
+    color: var(--destructive-foreground);
+}
+
+.button--secondary {
+    background-color: var(--accent);
+    color: var(--accent-foreground);
 }
 
 .auth__button {
@@ -339,6 +349,12 @@ a {
     font-size: 1.125rem;
     white-space: pre-line;
     padding-top: 2rem;
+}
+
+.view-note__button-row {
+    display: flex;
+    gap: 0.5rem;
+    padding-block: 1rem;
 }
 
 .note-gird {
