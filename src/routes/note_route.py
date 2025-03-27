@@ -23,7 +23,6 @@ def create_note_page():
 @login_required
 def view_note_page(note_id: int):
     note, error = note_service.get_note_by_id(note_id, join_user=True)
-    Logger.log(note)
     if error:
         Logger.error(error)
         return flask.redirect(flask.url_for("index_page"))
