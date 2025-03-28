@@ -1,18 +1,16 @@
-import flask
-from services import auth_service
-from werkzeug.security import check_password_hash
 import re
+import flask
 from decorators import csrf
+from services import auth_service
+from util.error import flash_errors
 from decorators.flash_fields import flash_fields
+from werkzeug.security import check_password_hash
 
 
 @csrf.setup
 def signin_page():
     if flask.session.get("signed_in"):
-        next_page = flask.request.form.get("next")
-
-        if not next_page or not len(next_page):
-            next_page = flask.url_for("index_page")
+        next_page = _get_next_page()
         return flask.redirect(next_page)
 
     return flask.render_template("auth/signin.html")
@@ -21,10 +19,7 @@ def signin_page():
 @csrf.setup
 def signup_page():
     if flask.session.get("signed_in"):
-        next_page = flask.request.form.get("next")
-
-        if not next_page or not len(next_page):
-            next_page = flask.url_for("index_page")
+        next_page = _get_next_page()
         return flask.redirect(next_page)
 
     return flask.render_template("auth/signup.html")
@@ -33,62 +28,35 @@ def signup_page():
 @csrf.validate("signin_page")
 @flash_fields
 def signin_action():
-    username = flask.request.form.get("username")
-    plain_password = flask.request.form.get("password")
-
-    errors = validate_credentials(username, plain_password)
-    if len(errors):
-        for error in errors:
-            flask.flash(error, category="error")
-        return flask.redirect(flask.url_for("signin_page"))
+    username, plain_password, next_page = _get_form_data()
+    errors = _validate_credentials(username, plain_password)
+    if errors:
+        return flash_errors(errors, "signin_page", next=next_page)
 
     user, error = auth_service.get_user_by_username(username)
     if error:
-        flask.flash(error, category="error")
-        return flask.redirect(flask.url_for("signin_page"))
+        return flash_errors(error, "signin_page", next=next_page)
 
     if not check_password_hash(user.password_hash, plain_password):
-        flask.flash("Virheellinen käyttäjätunnus ja/tai salasana", category="error")
-        return flask.redirect(flask.url_for("signin_page"))
+        error = "Virheellinen käyttäjätunnus ja/tai salasana"
+        return flash_errors(error, "signin_page", next=next_page)
 
-    next_page = flask.request.form.get("next")
-
-    if not next_page or not len(next_page):
-        next_page = flask.url_for("index_page")
-
-    response = flask.make_response(flask.redirect(next_page))
-    # Here you should also set secure to true if this was a real production application
-    response.set_cookie("Authorization", user.token, httponly=True, samesite="Strict")
-    return response
+    return _respond_with_token(user.token, next_page)
 
 
 @csrf.validate("signup_page")
 @flash_fields
 def signup_action():
-    username = flask.request.form.get("username")
-    plain_password = flask.request.form.get("password")
-
-    errors = validate_credentials_signup(username, plain_password)
-    if len(errors):
-        for error in errors:
-            flask.flash(error, category="error")
-        return flask.redirect(flask.url_for("signup_page"))
+    username, plain_password, next_page = _get_form_data()
+    errors = _validate_credentials_signup(username, plain_password)
+    if errors:
+        return flash_errors(errors, "signup_page", next=next_page)
 
     user, error = auth_service.create_user(username, plain_password)
-
     if error:
-        flask.flash(error, category="error")
-        return flask.redirect(flask.url_for("signup_page"))
+        return flash_errors(error, "signup_page", next=next_page)
 
-    next_page = flask.request.form.get("next")
-
-    if not next_page or not len(next_page):
-        next_page = flask.url_for("index_page")
-
-    response = flask.make_response(flask.redirect(next_page))
-    # Here you should also set secure to true if this was a real production application
-    response.set_cookie("Authorization", user.token, httponly=True, samesite="Strict")
-    return response
+    return _respond_with_token(user.token, next_page)
 
 
 def signout_action():
@@ -100,8 +68,8 @@ def signout_action():
     return response
 
 
-def validate_credentials_signup(username: str | None, password: str | None):
-    errors = validate_credentials(username, password)
+def _validate_credentials_signup(username: str | None, password: str | None):
+    errors = _validate_credentials(username, password)
 
     if errors:
         return errors
@@ -124,7 +92,7 @@ def validate_credentials_signup(username: str | None, password: str | None):
     return errors
 
 
-def validate_credentials(username: str | None, password: str | None):
+def _validate_credentials(username: str | None, password: str | None):
     errors = []
 
     if not username:
@@ -134,3 +102,20 @@ def validate_credentials(username: str | None, password: str | None):
         errors.append("Salasana on pakollinen")
 
     return errors
+
+
+def _get_next_page():
+    return flask.request.form.get("next") or flask.url_for("index_page")
+
+
+def _get_form_data():
+    username = flask.request.form.get("username")
+    password = flask.request.form.get("password")
+    next_page = _get_next_page()
+    return username, password, next_page
+
+
+def _respond_with_token(token: str, redirect_to: str):
+    response = flask.make_response(flask.redirect(redirect_to))
+    response.set_cookie("Authorization", token, httponly=True, samesite="Strict")
+    return response
