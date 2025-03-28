@@ -27,7 +27,7 @@ def get_note_by_id(note_id: int):
     """
 
     note_data = db.db_fetch(sql_command, [note_id])
-    if not len(note_data):
+    if not note_data:
         return None, "Muistiinpanoa ei löydetty"
 
     note_data = note_data[0]

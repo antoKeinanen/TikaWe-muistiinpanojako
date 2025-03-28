@@ -1,13 +1,11 @@
 import flask
 from decorators import csrf
-from decorators.login_required import login_required
+from models.user import User
+from models.note import Note
 from services import note_service
-from util.logger import Logger
-from typing import TYPE_CHECKING
+from util.error import flash_errors
 from decorators.flash_fields import flash_fields
-
-if TYPE_CHECKING:
-    from models.user import User
+from decorators.login_required import login_required
 
 
 @login_required
@@ -21,18 +19,13 @@ def create_note_page():
 def edit_note_page(note_id: int):
     note, error = note_service.get_note_by_id(note_id)
     if error:
-        flask.flash(error, category="error")
-        return flask.redirect(flask.url_for("view_note_page", note_id=note_id))
+        return flash_errors(error, "view_note_page", note_id=note_id)
 
     user = flask.request.user
 
-    if note.user_id != user.id:
-        Logger.error("Unauthorized note access")
-        flask.flash(
-            "Sinulla ei ole oikeutta muokata tätä muistiinpanoa",
-            category="error",
-        )
-        return flask.redirect(flask.url_for("view_note_page", note_id=note_id))
+    if _check_is_creator(note, user):
+        error = "Sinulla ei ole oikeutta muokata tätä muistiinpanoa"
+        return flash_errors(error, "view_note_page", note_id=note_id)
 
     return flask.render_template("notes/edit_note.html", note=note)
 
@@ -42,11 +35,9 @@ def edit_note_page(note_id: int):
 def view_note_page(note_id: int):
     note, error = note_service.get_note_by_id(note_id)
     if error:
-        Logger.error(error)
-        return flask.redirect(flask.url_for("index_page"))
+        return flash_errors(error, "index_page")
 
     user: User = flask.request.user
-    Logger.log(user, note, user.id == note.user_id)
 
     return flask.render_template(
         "notes/view_note.html",
@@ -60,13 +51,13 @@ def view_note_page(note_id: int):
 def delete_note_action(note_id: int):
     note, error = note_service.get_note_by_id(note_id)
     if error:
-        Logger.error(error)
-        return flask.redirect(flask.url_for("view_note_page", note_id=note_id))
+        return flash_errors(error, "view_note_page", note_id=note_id)
 
     user = flask.request.user
 
-    if note.user_id != user.id:
-        return flask.redirect(flask.url_for("view_note_page", note_id=note_id))
+    if _check_is_creator(note, user):
+        error = "Sinulla ei ole oikeutta muokata tätä muistiinpanoa"
+        return flash_errors(error, "view_note_page", note_id=note_id)
 
     note_service.delete_note_by_id(note_id)
 
@@ -77,30 +68,19 @@ def delete_note_action(note_id: int):
 @csrf.validate("index_page")
 @flash_fields
 def update_note_action(note_id: int):
-    errors = validate_note()
+    title, content = _get_form_data()
+    errors = _validate_note()
+    if errors:
+        return flash_errors(errors, "create_note_page")
 
-    if len(errors):
-        for error in errors:
-            flask.flash(error, category="error")
-        return flask.redirect(flask.url_for("create_note_page"))
-
-    title = flask.request.form.get("title")
-    content = flask.request.form.get("content")
     user: User = flask.request.user
-
     note, error = note_service.get_note_by_id(note_id)
     if error:
-        Logger.error(error)
-        flask.flash(error, category="error")
-        return flask.redirect(flask.url_for("view_note_page", note_id=note_id))
+        return flash_errors("view_note_page", note_id=note_id)
 
-    if note.user_id != user.id:
-        Logger.error("Unauthorized note access")
-        flask.flash(
-            "Sinulla ei ole oikeutta muokata tätä muistiinpanoa",
-            category="error",
-        )
-        return flask.redirect(flask.url_for("view_note_page", note_id=note_id))
+    if _check_is_creator(note, user):
+        error = "Sinulla ei ole oikeutta muokata tätä muistiinpanoa"
+        return flash_errors(error, "view_note_page", note_id=note_id)
 
     note_service.update_note_by_id(note_id, title, content)
 
@@ -111,28 +91,30 @@ def update_note_action(note_id: int):
 @csrf.validate("index_page")
 @flash_fields
 def create_note_action():
-    errors = validate_note()
-
-    if len(errors):
-        for error in errors:
-            flask.flash(error, category="error")
-        return flask.redirect(flask.url_for("create_note_page"))
-
-    title = flask.request.form.get("title")
-    content = flask.request.form.get("content")
+    title, content = _get_form_data()
+    errors = _validate_note(title, content)
+    if errors:
+        return flash_errors(errors, "create_note_page")
 
     user: User = flask.request.user
-
     new_note_id = note_service.create_note(title, content, user.id)
 
     next_url = flask.url_for("view_note_page", note_id=new_note_id)
     return flask.redirect(next_url)
 
 
-def validate_note():
+def _check_is_creator(note: Note, user: User):
+    return note.id == user.id
+
+
+def _get_form_data():
     title = flask.request.form.get("title")
     content = flask.request.form.get("content")
 
+    return title, content
+
+
+def _validate_note(title: str, content: str):
     errors = []
 
     if not title:

@@ -36,7 +36,7 @@ def get_user_by_username(username: str):
     """
 
     user = db.db_fetch(sql_command, [username])
-    if not len(user):
+    if not user:
         return None, "Virheellinen käyttäjätunnus ja/tai salasana"
     return User(*user[0]), None
 
@@ -49,6 +49,6 @@ def get_user_by_token(token: str):
     """
 
     user = db.db_fetch(sql_command, [token])
-    if not len(user):
+    if not user:
         return None, "Token ei vastaa käyttäjää"
     return User(*user[0]), None
