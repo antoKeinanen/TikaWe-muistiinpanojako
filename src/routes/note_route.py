@@ -12,18 +12,12 @@ if TYPE_CHECKING:
 @login_required
 @csrf.setup
 def create_note_page():
-    errors = flask.get_flashed_messages(category_filter="error")
-    return flask.render_template(
-        "notes/create_note.html",
-        errors=enumerate(errors),
-        error_count=len(errors),
-    )
+    return flask.render_template("notes/create_note.html")
 
 
 @login_required
 @csrf.setup
 def edit_note_page(note_id: int):
-    errors = flask.get_flashed_messages(category_filter="error")
     note, error = note_service.get_note_by_id(note_id, join_user=True)
     if error:
         flask.flash(error, category="error")
@@ -39,12 +33,7 @@ def edit_note_page(note_id: int):
         )
         return flask.redirect(flask.url_for("view_note_page", note_id=note_id))
 
-    return flask.render_template(
-        "notes/edit_note.html",
-        note=note,
-        errors=enumerate(errors),
-        error_count=len(errors),
-    )
+    return flask.render_template("notes/edit_note.html", note=note)
 
 
 @login_required

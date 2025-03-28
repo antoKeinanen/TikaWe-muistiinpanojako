@@ -14,13 +14,7 @@ def signin_page():
             next_page = flask.url_for("index_page")
         return flask.redirect(next_page)
 
-    errors = flask.get_flashed_messages(category_filter="error")
-
-    return flask.render_template(
-        "auth/signin.html",
-        errors=enumerate(errors),
-        error_count=len(errors),
-    )
+    return flask.render_template("auth/signin.html")
 
 
 @csrf.setup
@@ -32,12 +26,7 @@ def signup_page():
             next_page = flask.url_for("index_page")
         return flask.redirect(next_page)
 
-    errors = flask.get_flashed_messages(category_filter="error")
-    return flask.render_template(
-        "auth/signup.html",
-        errors=enumerate(errors),
-        error_count=len(errors),
-    )
+    return flask.render_template("auth/signup.html")
 
 
 @csrf.validate("signin_page")

@@ -10,24 +10,6 @@
 
 <!---->
 
-<div class="error__container">
-    {% for i, error in errors %}
-    <div class="error" style="--index: {{i}}; --error-count: {{error_count}}">
-        <p class="error__description">{{error}}</p>
-        <input
-            type="checkbox"
-            class="error__checkbox"
-            name="hide"
-            id="hide-{{i}}"
-            checked
-        />
-        <label class="error__close" for="hide-{{i}}">
-            <i class="fa-solid fa-xmark"></i>
-        </label>
-    </div>
-    {% endfor %}
-</div>
-
 <div class="card__container">
     <section class="card auth__content">
         <h1 class="card__heading">Mukava tavata!</h1>
@@ -51,9 +33,7 @@
             </div>
 
             <div class="input__container">
-                <label class="input__label" for="password">
-                    Salasana
-                </label>
+                <label class="input__label" for="password"> Salasana </label>
                 <input
                     class="input__text"
                     type="password"

@@ -10,23 +10,6 @@
 
 <!---->
 
-<div class="error__container">
-    {% for i, error in errors %}
-    <div class="error" style="--index: {{i}}; --error-count: {{error_count}}">
-        <p class="error__description">{{error}}</p>
-        <input
-            type="checkbox"
-            class="error__checkbox"
-            name="hide"
-            id="hide-{{i}}"
-            checked
-        />
-        <label class="error__close" for="hide-{{i}}">
-            <i class="fa-solid fa-xmark"></i>
-        </label>
-    </div>
-    {% endfor %}
-</div>
 <div class="card__container">
     <section class="note__card card">
         <h1 class="card__heading">Luo uusi muistiinpano</h1>

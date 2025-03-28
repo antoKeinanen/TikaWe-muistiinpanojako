@@ -4,11 +4,14 @@ import routes.index_route
 import routes.note_route
 import routes.search_route
 from util.config import parse_config
+from util.error_processor import inject_errors
 
 app = Flask(__name__)
 
 config = parse_config()
 app.secret_key = config["CSRF_SECRET"]
+
+app.context_processor(inject_errors)
 
 app.add_url_rule("/", view_func=routes.index_route.index_page)
 app.add_url_rule("/signup", view_func=routes.auth_route.signup_page)
