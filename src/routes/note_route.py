@@ -4,6 +4,7 @@ from decorators.login_required import login_required
 from services import note_service
 from util.logger import Logger
 from typing import TYPE_CHECKING
+from decorators.flash_fields import flash_fields
 
 if TYPE_CHECKING:
     from models.user import User
@@ -74,6 +75,7 @@ def delete_note_action(note_id: int):
 
 @login_required
 @csrf.validate("index_page")
+@flash_fields
 def update_note_action(note_id: int):
     errors = validate_note()
 
@@ -107,6 +109,7 @@ def update_note_action(note_id: int):
 
 @login_required
 @csrf.validate("index_page")
+@flash_fields
 def create_note_action():
     errors = validate_note()
 

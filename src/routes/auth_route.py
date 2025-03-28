@@ -3,6 +3,7 @@ from services import auth_service
 from werkzeug.security import check_password_hash
 import re
 from decorators import csrf
+from decorators.flash_fields import flash_fields
 
 
 @csrf.setup
@@ -30,6 +31,7 @@ def signup_page():
 
 
 @csrf.validate("signin_page")
+@flash_fields
 def signin_action():
     errors = validate_credentials()
 
@@ -62,6 +64,7 @@ def signin_action():
 
 
 @csrf.validate("signup_page")
+@flash_fields
 def signup_action():
     errors = validate_credentials()
 

@@ -21,23 +21,26 @@
             method="post"
         >
             <div class="input__container">
-                <label for="username">Otsikko</label>
+                <label for="title">Otsikko</label>
                 <input
                     class="input__text"
                     type="text"
                     name="title"
                     id="title"
+                    value="{{fields.title if fields else '' }}"
                 />
             </div>
 
             <div class="input__container">
-                <label for="username">Muistiinpanot</label>
+                <label for="content">Muistiinpanot</label>
                 <textarea
                     class="input__text"
                     name="content"
                     id="content"
                     rows="24"
-                ></textarea>
+                >
+{{fields.content if fields else '' }}</textarea
+                >
             </div>
 
             <input
