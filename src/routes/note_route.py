@@ -67,11 +67,7 @@ def delete_note_action(note_id: int):
     if note.user_id != user.id:
         return flask.redirect(flask.url_for("view_note_page", note_id=note_id))
 
-    _, error = note_service.delete_note_by_id(note_id)
-    if error:
-        Logger.error(error)
-        flask.flash(error, category="error")
-        return flask.redirect(flask.url_for("view_note_page", note_id=note_id))
+    note_service.delete_note_by_id(note_id)
 
     return flask.redirect(flask.url_for("view_note_page", note_id=note_id))
 
@@ -104,11 +100,7 @@ def update_note_action(note_id: int):
         )
         return flask.redirect(flask.url_for("view_note_page", note_id=note_id))
 
-    _, error = note_service.update_note_by_id(note_id, title, content)
-    if error:
-        Logger.error(error)
-        flask.flash(error, category="error")
-        return flask.redirect(flask.url_for("view_note_page", note_id=note_id))
+    note_service.update_note_by_id(note_id, title, content)
 
     return flask.redirect(flask.url_for("view_note_page", note_id=note_id))
 
@@ -128,13 +120,9 @@ def create_note_action():
 
     user: User = flask.request.user
 
-    new_note, error = note_service.create_note(title, content, user.id)
+    new_note_id = note_service.create_note(title, content, user.id)
 
-    if error:
-        flask.flash(error, category="error")
-        return flask.redirect(flask.url_for("create_note_page"))
-
-    next_url = flask.url_for("view_note_page", note_id=new_note.id)
+    next_url = flask.url_for("view_note_page", note_id=new_note_id)
     return flask.redirect(next_url)
 
 

@@ -5,5 +5,5 @@ from services import note_service
 
 @login_required
 def index_page():
-    notes, error = note_service.get_recent_notes()
+    notes = note_service.get_recent_notes()
     return flask.render_template("index.html", notes=notes)
