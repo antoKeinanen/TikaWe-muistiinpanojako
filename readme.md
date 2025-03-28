@@ -2,7 +2,15 @@
 
 Sovelluksessa käyttäjät pystyvät luomaan sekä lukemaan muistiinpanoja sekä kommentoida niitä.
 
+## Esittely
+### Kirjautumis sivu
+![login page](https://github.com/antoKeinanen/TikaWe-muistiinpanojako/blob/main/media/login.png?raw=true)
 
+### Uusi muistiinpano
+![new note](https://github.com/antoKeinanen/TikaWe-muistiinpanojako/blob/main/media/new.png?raw=true)
+
+### Lue muistiinpano
+![read note](https://github.com/antoKeinanen/TikaWe-muistiinpanojako/blob/main/media/read.png?raw=true)
 
 ## Asennus
 ```bash
@@ -89,3 +97,7 @@ invoke format
 - [ ] Käyttäjäsivulla näkyy kaikki toisen käyttäjän muistiinpanot
 - [ ] Käyttäjäsivulla näkyy tilastoja toisesta käyttäjästä
 - [ ] Käyttäjä voi lisätä muistiinpanoon kommentteja
+
+
+## Lisenssi
+Jaetaan MIT-lisenssin mukaisesti. Katso lisätietoja `LICENSE`-tiedostosta.
