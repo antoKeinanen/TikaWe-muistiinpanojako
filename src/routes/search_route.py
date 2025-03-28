@@ -5,9 +5,7 @@ from services import note_service
 
 @login_required
 def search_page():
-    query = flask.request.args.get("query")
-    if not query:
-        query = ""
+    query = flask.request.args.get("query", "")
 
-    notes, error = note_service.get_note_by_query(query)
+    notes = note_service.get_note_by_query(query)
     return flask.render_template("search.html", notes=notes, query=query)
