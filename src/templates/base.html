@@ -34,6 +34,25 @@
                 >
                 <ul class="navigation-bar__links">
                     {% if session["signed_in"] %}
+                    <li class="navigation-bar__search">
+                        <form action="/search" method="get">
+                            <input
+                                class="input__text navigation-bar__search-input"
+                                id="query"
+                                name="query"
+                                type="text"
+                                placeholder=""
+                                value="{{query}}"
+                            />
+                        </form>
+                        <label for="query">
+                            <i
+                                class="fa-solid fa-magnifying-glass search__icon"
+                                aria-label="search"
+                            ></i>
+                        </label>
+                    </li>
+
                     <li class="navigation-bar__link">
                         <a href="/note/create">Uusi muistiinpano</a>
                     </li>
