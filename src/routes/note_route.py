@@ -137,7 +137,7 @@ def validate_note():
 
     if not title:
         errors.append("Muistiinpanolle on annettava otsikko")
-    elif len(title) > 24:
+    elif len(title) > 64:
         errors.append("Otsikko on liian pitkä")
     elif len(title) < 3:
         errors.append("Otsikko on liian lyhyt")

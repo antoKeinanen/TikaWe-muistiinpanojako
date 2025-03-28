@@ -199,8 +199,13 @@ a {
     padding: 2rem 4rem;
 }
 
-.auth__card {
-    width: 32rem;
+.auth__content {
+    width: 28rem;
+}
+
+.input__description {
+    color: var(--muted-foreground);
+    font-size: 0.875rem;
 }
 
 .card__heading {
@@ -211,6 +216,7 @@ a {
 .card__subtext {
     color: var(--muted-foreground);
     margin-bottom: 1.5rem;
+    text-align: center;
 }
 
 .auth__form {

@@ -31,6 +31,10 @@
                     id="username"
                     value="{{fields.username if fields else '' }}"
                 />
+                <p class="input__description">
+                    Käyttäjätunnuksen on oltava yli 3 merkkiä ja alle 16 merkkiä
+                    pitkä.
+                </p>
             </div>
 
             <div class="input__container">
@@ -42,6 +46,10 @@
                     id="password"
                     value="{{fields.password if fields else '' }}"
                 />
+                <p class="input__description">
+                    Salasanan tulee olla vähintään 8 merkkiä pitkä sekä sisältää
+                    vähintään yhden ison ja pienen kirjaimen.
+                </p>
             </div>
 
             <input
@@ -67,7 +75,7 @@
             />
 
             <a
-                href="{{url_for('signup_page')}}?next={{request.args.get('next', '')}}"
+                href="{{url_for('signin_page')}}?next={{request.args.get('next', next)}}"
                 class="auth__swap"
             >
                 Onko sinulla jo käyttäjä?
