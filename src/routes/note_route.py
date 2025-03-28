@@ -19,7 +19,7 @@ def create_note_page():
 @login_required
 @csrf.setup
 def edit_note_page(note_id: int):
-    note, error = note_service.get_note_by_id(note_id, join_user=True)
+    note, error = note_service.get_note_by_id(note_id)
     if error:
         flask.flash(error, category="error")
         return flask.redirect(flask.url_for("view_note_page", note_id=note_id))
@@ -40,7 +40,7 @@ def edit_note_page(note_id: int):
 @login_required
 @csrf.setup
 def view_note_page(note_id: int):
-    note, error = note_service.get_note_by_id(note_id, join_user=True)
+    note, error = note_service.get_note_by_id(note_id)
     if error:
         Logger.error(error)
         return flask.redirect(flask.url_for("index_page"))
