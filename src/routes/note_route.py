@@ -38,7 +38,7 @@ def edit_note_page(note_id: int):
 
     user = flask.request.user
 
-    if _check_is_creator(note, user):
+    if not _check_is_creator(note, user):
         error = "Sinulla ei ole oikeutta muokata tätä muistiinpanoa"
         return flash_errors(error, "view_note_page", note_id=note_id)
 
@@ -109,13 +109,13 @@ def delete_note_action(note_id: int):
 
     user = flask.request.user
 
-    if _check_is_creator(note, user):
-        error = "Sinulla ei ole oikeutta muokata tätä muistiinpanoa"
+    if not _check_is_creator(note, user):
+        error = "Sinulla ei ole oikeutta poistaa tätä muistiinpanoa"
         return flash_errors(error, "view_note_page", note_id=note_id)
 
     note_service.delete_note_by_id(note_id)
 
-    return flask.redirect(flask.url_for("view_note_page", note_id=note_id))
+    return flask.redirect(flask.url_for("index_page"))
 
 
 @login_required
@@ -155,7 +155,7 @@ def update_note_action(note_id: int):
     if error:
         return flash_errors("view_note_page", note_id=note_id)
 
-    if _check_is_creator(note, user):
+    if not _check_is_creator(note, user):
         error = "Sinulla ei ole oikeutta muokata tätä muistiinpanoa"
         return flash_errors(error, "view_note_page", note_id=note_id)
 
@@ -211,7 +211,7 @@ def _check_is_creator(note: Note, user: User):
         bool: True if the user is the creator of the note, False otherwise.
     """
 
-    return note.id == user.id
+    return note.user_id == user.id
 
 
 def _get_form_data():
