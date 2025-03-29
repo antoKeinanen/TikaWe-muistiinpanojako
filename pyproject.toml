@@ -30,9 +30,11 @@ include = ["src/**/*.py"]
 target-version = "py312"
 lint.ignore = [
     "I001",
-    "D",
-    "D203",
+    "D100",
     "D212",
+    "D202",
+    "D205",
+    "D413",
     "PTH123",
     "ANN201",
     "ANN202",
@@ -41,6 +43,7 @@ lint.ignore = [
     "PLR2004",
     "PT009",
 ]
+
 
 [tool.pytest.ini_options]
 addopts = "-ra -q -n 4 --random-order"

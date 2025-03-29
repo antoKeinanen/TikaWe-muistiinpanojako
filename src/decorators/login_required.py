@@ -6,6 +6,21 @@ from util.logger import Logger
 
 
 def login_required(f: Callable):
+    """
+    Ensure that a user is logged in before accessing a route.
+
+    This decorator checks for an authorization token in the cookies.
+    - If the token is missing or invalid, the user is redirected to the sign-in page.
+    - If the token is valid, the user information is attached to the request object and
+    the original function is executed.
+
+    Args:
+        f (Callable): The function to be decorated.
+
+    Returns:
+        Callable: The decorated function that includes the login check.
+    """
+
     @wraps(f)
     def decorated_function(*args: tuple, **kwargs: dict) -> flask.Response:
         token = flask.request.cookies.get("Authorization")

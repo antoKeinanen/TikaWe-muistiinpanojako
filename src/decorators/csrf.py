@@ -6,6 +6,27 @@ from util.logger import Logger
 
 
 def setup(f: Callable):
+    """
+    Set up CSRF protection by generating a CSRF token and storing it in the
+    Flask session before calling the decorated function.
+
+    Should be used as pairs with csrf.setup on the page and csrf.validate on the action.
+
+    Args:
+        f (Callable): The function to be decorated.
+
+    Returns:
+        Callable: The decorated function that includes CSRF token setup.
+
+    Example:
+        ```python
+        @csrf.setup
+        def my_view_function():
+            # Your view logic here
+            return flask.Response("Hello, World!")
+        ```
+    """
+
     @wraps(f)
     def decorated_function(*args: tuple, **kwargs: dict) -> flask.Response:
         flask.session["csrf_token"] = secrets.token_hex(16)
@@ -15,7 +36,31 @@ def setup(f: Callable):
     return decorated_function
 
 
-def validate(fallback: str):
+def validate(fallback: str = "index_page"):
+    """
+    Validate the CSRF token from the client against the server's
+    stored CSRF token before executing the decorated function. If the
+    tokens match, calls the decorated function. If not flashes the error
+    to the user, and redirects to the fallback page passed as an argument.
+
+    Should be used as pairs with csrf.setup on the page and csrf.validate on the action.
+
+    Args:
+        fallback (str, optional): The name of the fallback route to redirect to in case
+        of validation failure. Defaults to `"index_page"`.
+
+    Returns:
+        Callable: The decorated function that includes CSRF token validation.
+
+    Example:
+        ```python
+        @csrf.validate(fallback="home_page")
+        def my_secure_action():
+            # Your secure view logic here
+            return flask.Response("Secure Content")
+        ```
+    """
+
     def decorator(f: Callable) -> Callable:
         @wraps(f)
         def decorated_function(*args: tuple, **kwargs: dict) -> flask.Response:
