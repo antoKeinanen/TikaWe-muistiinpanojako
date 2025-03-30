@@ -146,7 +146,7 @@ def update_note_action(note_id: int):
     """
 
     title, content = _get_form_data()
-    errors = _validate_note()
+    errors = _validate_note(title, content)
     if errors:
         return flash_errors(errors, "create_note_page")
 
