@@ -11,36 +11,34 @@
 <!---->
 
 <section class="view-note">
-    <h1 class="view-note__heading">{{note.title}}</h1>
-    <p class="view-note__author">{{note.user.username}}</p>
-    {% if is_creator %}
-    <form
-        class="view-note__button-row"
-        action="{{url_for('delete_note_action', note_id=note.id)}}"
-        method="post"
-    >
-        <input
-            type="text"
-            name="csrf_token"
-            id="csrf_token"
-            value="{{session.csrf_token}}"
-            hidden
-        />
+    <div class="view-note__header">
+        <div class="view-note__header__text-content">
+            <h1 class="view-note__heading">{{note.title}}</h1>
+            <p class="view-note__author">{{note.user.username}}</p>
+        </div>
+        {% if is_creator %}
+        <div class="popover">
+            <div class="popover__trigger button button--secondary">
+                <i class="fa-solid fa-ellipsis"></i>
+            </div>
+            <div class="view-note__popover popover__content">
+                <a
+                    href="{{url_for('edit_note_page', note_id=note.id)}}"
+                    class="button button--secondary button--wide"
+                >
+                    Muokkaa
+                </a>
 
-        <input
-            type="submit"
-            class="button button--destructive"
-            value="Poista"
-        />
-
-        <a
-            href="{{url_for('edit_note_page', note_id=note.id)}}"
-            class="button button--secondary"
-        >
-            Muokkaa
-        </a>
-    </form>
-    {% endif %}
+                <input
+                    type="submit"
+                    form="delete-csrf"
+                    class="button button--destructive button--wide"
+                    value="Poista"
+                />
+            </div>
+        </div>
+        {% endif %}
+    </div>
     <div class="view-note__content" disabled rows="24">{{note.content}}</div>
 </section>
 <hr class="view-note__divider" />
@@ -50,7 +48,7 @@
         <div class="input__container">
             <label class="input__label" for="comment">Kommentti</label>
             <textarea class="input__text" name="comment" id="comment" rows="5">
-{{fields.content if fields else '' }}</textarea
+{{fields.comment if fields else '' }}</textarea
             >
         </div>
 
@@ -75,5 +73,19 @@
         <p class="comment__author">Anto</p>
     </div>
 </section>
+
+<form
+    action="{{url_for('delete_note_action', note_id=note.id)}}"
+    method="post"
+    id="delete-csrf"
+>
+    <input
+        type="text"
+        name="csrf_token"
+        id="csrf_token"
+        value="{{session.csrf_token}}"
+        hidden
+    />
+</form>
 
 {% endblock %}

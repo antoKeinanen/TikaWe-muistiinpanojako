@@ -199,6 +199,39 @@ a {
     padding: 2rem 4rem;
 }
 
+.popover {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: min-content;
+    padding-block: 1rem;
+}
+
+.popover__content {
+    position: absolute;
+    transition: opacity 250ms ease-in-out, transform 250ms ease-in-out;
+    opacity: 0;
+    transform: translateY(5px);
+    visibility: collapse;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--background);
+    border: 1px dashed var(--border);
+    border-radius: 0.75rem;
+    padding: 1rem 0.75rem;
+    gap: 0.5rem;
+}
+
+.popover__trigger:hover ~ .popover__content,
+.popover__content:hover,
+.popover:hover .popover__content {
+    visibility: visible;
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
 .auth__content {
     width: 28rem;
 }
@@ -239,6 +272,7 @@ a {
     border-radius: 0.5rem;
     cursor: pointer;
     width: fit-content;
+    text-align: center;
 }
 
 .button:hover {
@@ -247,6 +281,7 @@ a {
 
 .button--wide {
     width: 100%;
+    flex-grow: 1;
 }
 
 .button--large {
@@ -399,6 +434,12 @@ a {
     padding-block: 2rem;
 }
 
+.view-note__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .view-note__heading {
     font-size: 2rem;
     font-weight: bold;
@@ -426,6 +467,11 @@ a {
     margin-block: 2rem;
     border: 1px dashed var(--border);
     border-bottom: none;
+}
+
+.view-note__popover {
+    width: 12rem;
+    top: 4rem;
 }
 
 .comments {
