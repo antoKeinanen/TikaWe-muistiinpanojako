@@ -86,4 +86,4 @@ def db_fetch_all(sql_command: str, arguments: list | None = None):
         cursor.execute(sql_command, arguments)
         return cursor.fetchall()
 
-    _perform_db_operation(fetch_all)
+    return _perform_db_operation(fetch_all)
