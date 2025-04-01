@@ -1,4 +1,30 @@
 import sqlite3
+from sqlite3 import Cursor
+from collections.abc import Callable
+from typing import Any
+
+
+def _perform_db_operation(action: Callable[[Cursor], Any]):
+    """
+    Execute a database operation within a managed SQLite connection.
+
+    This function opens a connection to the 'database.db' SQLite database and creates
+    a cursor. It then passes the cursor to the provided 'action' callable, which is
+    expected to execute a database operation and return a result. The function returns
+    the result produced by the 'action' callable.
+
+    Args:
+        action (Callable[[sqlite3.Cursor], Any]):
+            A callable that takes a single argument,
+            a SQLite cursor, performs a database operation, and returns a result.
+
+    Returns:
+        Any: The result returned by the 'action' callable.
+    """
+
+    with sqlite3.connect("database.db") as connection:
+        cursor = connection.cursor()
+        return action(cursor)
 
 
 def db_execute(sql_command: str, arguments: list | None = None):
@@ -15,10 +41,10 @@ def db_execute(sql_command: str, arguments: list | None = None):
         int: The ID of the last row affected by the SQL command.
     """
 
-    with sqlite3.connect("database.db") as connection:
-        cursor = connection.cursor()
-        cursor.execute(sql_command, arguments)
-        return cursor.lastrowid
+    def execute(cursor: Cursor):
+        return cursor.execute(sql_command, arguments).lastrowid
+
+    return _perform_db_operation(execute)
 
 
 def db_fetch(sql_command: str, arguments: list | None = None, size: int = 1):
@@ -36,10 +62,11 @@ def db_fetch(sql_command: str, arguments: list | None = None, size: int = 1):
         list: A list of fetched rows.
     """
 
-    with sqlite3.connect("database.db") as connection:
-        cursor = connection.cursor()
+    def fetch(cursor: Cursor):
         cursor.execute(sql_command, arguments)
         return cursor.fetchmany(size)
+
+    return _perform_db_operation(fetch)
 
 
 def db_fetch_all(sql_command: str, arguments: list | None = None):
@@ -55,7 +82,8 @@ def db_fetch_all(sql_command: str, arguments: list | None = None):
         list: A list of all fetched rows.
     """
 
-    with sqlite3.connect("database.db") as connection:
-        cursor = connection.cursor()
+    def fetch_all(cursor: Cursor):
         cursor.execute(sql_command, arguments)
         return cursor.fetchall()
+
+    _perform_db_operation(fetch_all)
