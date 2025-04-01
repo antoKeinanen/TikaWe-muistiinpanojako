@@ -168,7 +168,7 @@ def _validate_credentials_signup(username: str | None, password: str | None):
         errors.append("Salasanan tulee olla alle 255 merkkiä pitkä")
     elif not (
         re.compile(r"[A-ZÅÄÖ]").search(password)
-        or not re.compile(r"[a-zåäö]").search(password)
+        and re.compile(r"[a-zåäö]").search(password)
     ):
         errors.append("Salasanassa on oltava isoja ja pieniä kirjaimia")
 
