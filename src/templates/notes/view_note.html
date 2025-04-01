@@ -36,11 +36,44 @@
         <a
             href="{{url_for('edit_note_page', note_id=note.id)}}"
             class="button button--secondary"
-            >Muokkaa</a
         >
+            Muokkaa
+        </a>
     </form>
     {% endif %}
     <div class="view-note__content" disabled rows="24">{{note.content}}</div>
+</section>
+<hr class="view-note__divider" />
+
+<section class="comments">
+    <form class="comment__form" action="" method="post">
+        <div class="input__container">
+            <label class="input__label" for="comment">Kommentti</label>
+            <textarea class="input__text" name="comment" id="comment" rows="5">
+{{fields.content if fields else '' }}</textarea
+            >
+        </div>
+
+        <input
+            type="text"
+            name="csrf_token"
+            id="csrf_token"
+            value="{{session.csrf_token}}"
+            hidden
+        />
+
+        <input type="submit" class="button button--right" value="Kommentoi" />
+    </form>
+
+    <div class="comment">
+        <p class="comment__content">
+            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Obcaecati
+            temporibus aspernatur possimus in? Magnam iusto ad sed quibusdam,
+            eaque doloribus quidem deserunt quasi sint deleniti adipisci ipsum,
+            odio quod fuga!
+        </p>
+        <p class="comment__author">Anto</p>
+    </div>
 </section>
 
 {% endblock %}

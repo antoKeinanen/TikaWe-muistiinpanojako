@@ -407,6 +407,7 @@ a {
 .view-note__author {
     font-size: 1.25rem;
     color: var(--muted-foreground);
+    font-weight: 500;
 }
 
 .view-note__content {
@@ -419,6 +420,46 @@ a {
     display: flex;
     gap: 0.5rem;
     padding-block: 1rem;
+}
+
+.view-note__divider {
+    margin-block: 2rem;
+    border: 1px dashed var(--border);
+    border-bottom: none;
+}
+
+.comments {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding-inline: 16rem;
+    padding-block: 2rem;
+}
+
+.comment {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    border-left: 2px dashed var(--border);
+    padding-left: 2rem;
+    padding-block: 0.5rem;
+}
+
+.comment__content {
+    font-size: 1.125rem;
+    white-space: pre-line;
+}
+
+.comment__author {
+    font-size: 1.25rem;
+    color: var(--muted-foreground);
+    font-weight: 500;
+}
+
+.comment__form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .note-gird {
