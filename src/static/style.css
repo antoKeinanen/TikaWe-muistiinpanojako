@@ -234,6 +234,7 @@ a {
 
 .button {
     background-color: var(--primary);
+    color: var(--primary-foreground);
     padding: 0.5rem 0.75rem;
     border-radius: 0.5rem;
     cursor: pointer;
