@@ -55,6 +55,9 @@ flask --app src/main run
 Jos asensit sovelluksen poetryä käyttäen:
 
 ```bash
+# Alusta tietokanta
+invoke setup
+
 # Käynnistä sovellus
 invoke start
 
@@ -71,9 +74,6 @@ Koska automatisoitu testaus ja -laadunvarmistus ei ole kurssin arvioinnin piiris
 VAROITUS: testaus poistaa kaikki tietokannassa olemassaolevat tiedot!
 
 ```bash
-# Alusta tietokanta
-invoke setup
-
 # Käynnistä sovellus
 invoke start
 
