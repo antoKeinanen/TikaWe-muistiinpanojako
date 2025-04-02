@@ -153,7 +153,7 @@ def update_note_action(note_id: int):
     user: User = flask.request.user
     note, error = note_service.get_note_by_id(note_id)
     if error:
-        return flash_errors("view_note_page", note_id=note_id)
+        return flash_errors(error, "view_note_page", note_id=note_id)
 
     if not _check_is_creator(note, user):
         error = "Sinulla ei ole oikeutta muokata tätä muistiinpanoa"
