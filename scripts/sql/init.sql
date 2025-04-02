@@ -13,9 +13,5 @@ CREATE TABLE
         content TEXT NOT NULL,
         user_id INTEGER NOT NULL,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-
-        FOREIGN KEY (user_id) 
-            REFERENCES users (user_id) 
-            ON UPDATE CASCADE 
-            ON DELETE CASCADE
+        FOREIGN KEY (user_id) REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE
     );
