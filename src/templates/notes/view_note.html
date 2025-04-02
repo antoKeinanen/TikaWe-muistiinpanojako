@@ -44,10 +44,14 @@
 <hr class="view-note__divider" />
 
 <section class="comments">
-    <form class="comment__form" action="" method="post">
+    <form
+        class="comment__form"
+        action="{{url_for('create_comment_action', note_id=note.id)}}"
+        method="post"
+    >
         <div class="input__container">
-            <label class="input__label" for="comment">Kommentti</label>
-            <textarea class="input__text" name="comment" id="comment" rows="5">
+            <label class="input__label" for="content">Kommentti</label>
+            <textarea class="input__text" name="content" id="content" rows="5">
 {{fields.comment if fields else '' }}</textarea
             >
         </div>
@@ -63,15 +67,12 @@
         <input type="submit" class="button button--right" value="Kommentoi" />
     </form>
 
+    {% for comment in comments %}
     <div class="comment">
-        <p class="comment__content">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Obcaecati
-            temporibus aspernatur possimus in? Magnam iusto ad sed quibusdam,
-            eaque doloribus quidem deserunt quasi sint deleniti adipisci ipsum,
-            odio quod fuga!
-        </p>
-        <p class="comment__author">Anto</p>
+        <p class="comment__content">{{comment.content}}</p>
+        <p class="comment__author">{{comment.user.username}}</p>
     </div>
+    {% endfor %}
 </section>
 
 <form

@@ -107,12 +107,12 @@ invoke format
 -   [x] Käyttäjä voi hakea muistiinpanoja otsikon perusteella
 -   [x] Käyttäjä näkee kenen tahansa muistiinpanon
 -   [x] Sovelluksen teema valitaan käyttäjän järjestelmän teema valinnan mukaan
+-   [x] Käyttäjä voi lisätä muistiinpanoon kommentteja
 -   [ ] Käyttäjä voi lisätä yhden tai useamman aiheen muistiinpanolle
 -   [ ] Käyttäjä voi hakea muistiinpanoja aiheen perusteella
 -   [ ] Käyttäjä näkee toisen käyttäjän käyttäjäsivun
 -   [ ] Käyttäjäsivulla näkyy kaikki toisen käyttäjän muistiinpanot
 -   [ ] Käyttäjäsivulla näkyy tilastoja toisesta käyttäjästä
--   [ ] Käyttäjä voi lisätä muistiinpanoon kommentteja
 
 ## Tekoälyn käyttö raportti
 

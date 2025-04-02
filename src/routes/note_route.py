@@ -2,7 +2,7 @@ import flask
 from decorators import csrf
 from models.user import User
 from models.note import Note
-from services import note_service
+from services import note_service, comment_service
 from util.error import flash_errors
 from decorators.flash_fields import flash_fields
 from decorators.login_required import login_required
@@ -71,12 +71,14 @@ def view_note_page(note_id: int):
     if error:
         return flash_errors(error, "index_page")
 
+    comments = comment_service.get_note_comments(note_id)
     user: User = flask.request.user
 
     return flask.render_template(
         "notes/view_note.html",
         note=note,
         is_creator=user.id == note.user_id,
+        comments=comments,
     )
 
 

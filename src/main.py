@@ -3,6 +3,7 @@ import routes.auth_route
 import routes.index_route
 import routes.note_route
 import routes.search_route
+import routes.comment_route
 from util.config import parse_config
 from injectors.error_injector import inject_errors
 from injectors.field_injector import inject_fields
@@ -47,5 +48,10 @@ app.add_url_rule(
 app.add_url_rule(
     "/api/note/<int:note_id>/delete",
     view_func=routes.note_route.delete_note_action,
+    methods=["POST"],
+)
+app.add_url_rule(
+    "/api/comment/<int:note_id>/new",
+    view_func=routes.comment_route.create_comment_action,
     methods=["POST"],
 )
