@@ -33,9 +33,7 @@ def get_note_by_id(note_id: int):
         note_id (int): The ID of the note to retrieve.
 
     Returns:
-        tuple: A tuple containing the Note object and an error message.
-               If the note is found, error is None.
-               If the note is not found, returns None and an error message.
+        tuple: An errors as value tuple containing either the note or an error message.
     """
 
     sql_command = """

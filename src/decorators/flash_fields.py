@@ -8,10 +8,6 @@ def flash_fields(f: Callable):
     """
     Flash form fields from a Flask request before calling the decorated function.
 
-    This decorator converts the form fields from a Flask request into a dictionary,
-    serializes it to JSON, and flashes the JSON string with the category "fields".
-    After flashing the fields, it proceeds to call the decorated function.
-
     The flashed fields are then read automatically by the `inject_fields` injector and
     injected for usage in jinja templates.
 

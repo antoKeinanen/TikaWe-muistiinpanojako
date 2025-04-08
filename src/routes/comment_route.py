@@ -10,16 +10,7 @@ from decorators.login_required import login_required
 @csrf.validate()
 @flash_fields
 def create_comment_action(note_id: int):
-    """
-    Create a new comment for a note.
-
-    Args:
-        note_id (int): The identifier of the note to which the comment is being added.
-
-    Returns:
-        A Flask redirect response to the note view page if the comment is created
-        successfully, or a response with flashed error messages if validation fails.
-    """
+    """Create a new comment for a note."""
     content, user = _get_comment_details()
     error = _validate_comment(content)
     if error:

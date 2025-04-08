@@ -18,9 +18,8 @@ def create_user(username: str, plain_password: str):
         plain_password (str): The plain text password for the new user.
 
     Returns:
-        tuple: A tuple containing the User object and an error message.
-               If the user is created successfully, error is None.
-               If the username is already taken, returns None and an error message.
+        tuple: An errors as value tuple containing either the created user or
+                an error message.
     """
 
     password_hash = generate_password_hash(
@@ -53,9 +52,8 @@ def get_user_by_username(username: str):
         username (str): The username of the user to retrieve.
 
     Returns:
-        tuple: A tuple containing the User object and an error message.
-               If the user is found, error is None.
-               If the user is not found, returns None and an error message.
+        tuple: An errors as value tuple containing either the found user or
+                an error message.
     """
 
     sql_command = """
@@ -78,9 +76,8 @@ def get_user_by_token(token: str):
         token (str): The token of the user to retrieve.
 
     Returns:
-        tuple: A tuple containing the User object and an error message.
-               If the user is found, error is None.
-               If the user is not found, returns None and an error message.
+        tuple: An errors as value tuple containing either the found user or
+                an error message.
     """
 
     sql_command = """

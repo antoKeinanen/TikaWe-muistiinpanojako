@@ -8,11 +8,6 @@ def _perform_db_operation(action: Callable[[Cursor], Any]):
     """
     Execute a database operation within a managed SQLite connection.
 
-    This function opens a connection to the 'database.db' SQLite database and creates
-    a cursor. It then passes the cursor to the provided 'action' callable, which is
-    expected to execute a database operation and return a result. The function returns
-    the result produced by the 'action' callable.
-
     Args:
         action (Callable[[sqlite3.Cursor], Any]):
             A callable that takes a single argument,

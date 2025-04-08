@@ -7,10 +7,6 @@ def inject_fields() -> dict:
     Retrieve flashed field data from the Flask session and prepare them for
     injection into templates.
 
-    This function collects field data that have been flashed with the category
-    `"fields"`. If field data is found, it is parsed from JSON format and returned
-    in a dictionary.
-
     The action called by the form should be decorated with `@flash_fields` decorator.
 
     Returned value is automatically injected for usage in jinja templates.

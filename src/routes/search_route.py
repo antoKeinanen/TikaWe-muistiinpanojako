@@ -5,16 +5,7 @@ from services import note_service
 
 @login_required
 def search_page():
-    """
-    Render the search page with notes' title matching the query.
-
-    Retrieves the query from the request's arguments, searches for
-    notes matching the query using the note_service, and renders
-    the search.html template with the found notes.
-
-    Returns:
-        Response: Rendered search.html template.
-    """
+    """Render the search page with notes' title matching the query."""
 
     query = flask.request.args.get("query", "")
 

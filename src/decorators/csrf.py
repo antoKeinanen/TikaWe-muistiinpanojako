@@ -38,10 +38,8 @@ def setup(f: Callable):
 
 def validate(fallback: str = "index_page"):
     """
-    Validate the CSRF token from the client against the server's
-    stored CSRF token before executing the decorated function. If the
-    tokens match, calls the decorated function. If not flashes the error
-    to the user, and redirects to the fallback page passed as an argument.
+    Validate the CSRF token from the client against the server's stored CSRF token
+    before executing the decorated function.
 
     Should be used as pairs with csrf.setup on the page and csrf.validate on the action.
 
