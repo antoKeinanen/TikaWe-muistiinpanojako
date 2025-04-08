@@ -9,19 +9,19 @@
 {% block content %}
 <!---->
 {% if notes %}
-<section class="note-gird">
+<section class="note-grid">
     {% for note in notes %}
     <a href="/note/{{note.id}}">
-        <div class="card note-gird__card">
-            <p class="note-gird__title">{{note.title}}</p>
+        <div class="card note-grid__card">
+            <p class="note-grid__title">{{note.title}}</p>
             <p class="note-card__author">Kirjoittanut: {{note.user}}</p>
         </div>
     </a>
     {% endfor %}
 </section>
 {% else %}
-<div class="index__not-found">
-    <h1 class="index__not-found__heading">Haullasi ei löytynyt mitään!</h1>
+<div class="note-grid__not-found">
+    <h1 class="note-grid__not-found__heading">Haullasi ei löytynyt mitään!</h1>
 </div>
 {% endif %}
 <!---->

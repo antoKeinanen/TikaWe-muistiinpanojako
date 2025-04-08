@@ -1,7 +1,7 @@
 import re
 import flask
 from decorators import csrf
-from services import auth_service
+from services import user_service
 from util.error import flash_errors
 from decorators.flash_fields import flash_fields
 from werkzeug.security import check_password_hash
@@ -73,7 +73,7 @@ def signin_action():
     if errors:
         return flash_errors(errors, "signin_page", next=next_page)
 
-    user, error = auth_service.get_user_by_username(username)
+    user, error = user_service.get_user_by_username(username)
     if error:
         return flash_errors(error, "signin_page", next=next_page)
 
@@ -107,7 +107,7 @@ def signup_action():
     if errors:
         return flash_errors(errors, "signup_page", next=next_page)
 
-    user, error = auth_service.create_user(username, plain_password)
+    user, error = user_service.create_user(username, plain_password)
     if error:
         return flash_errors(error, "signup_page", next=next_page)
 

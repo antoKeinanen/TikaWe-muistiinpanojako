@@ -24,6 +24,7 @@ def _perform_db_operation(action: Callable[[Cursor], Any]):
 
     with sqlite3.connect("database.db") as connection:
         cursor = connection.cursor()
+        cursor.execute("PRAGMA foreign_keys = ON;")
         return action(cursor)
 
 

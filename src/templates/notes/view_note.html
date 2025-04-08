@@ -14,7 +14,12 @@
     <div class="view-note__header">
         <div class="view-note__header__text-content">
             <h1 class="view-note__heading">{{note.title}}</h1>
-            <p class="view-note__author">{{note.user.username}}</p>
+            <a
+                href="{{url_for('user_page', username=note.user.username)}}"
+                class="view-note__author"
+            >
+                {{note.user.username}}
+            </a>
         </div>
         {% if is_creator %}
         <div class="popover">
@@ -41,7 +46,7 @@
     </div>
     <div class="view-note__content" disabled rows="24">{{note.content}}</div>
 </section>
-<hr class="view-note__divider" />
+<hr class="divider" />
 
 <section class="comments">
     <form

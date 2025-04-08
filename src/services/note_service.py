@@ -155,3 +155,26 @@ def get_note_by_query(query: str, limit: int = 10, offset: int = 0):
 
     notes = db.db_fetch_all(sql_command, [f"%{query}%", limit, offset])
     return [Note(*note) for note in notes]
+
+
+def get_notes_by_user(user: User):
+    """
+    Get all note records associated with the given user.
+
+    Arguments:
+        user (User): The user for whom the notes are to be retrieved.
+            The user object must have an 'id' attribute.
+
+    Returns:
+        List[Note]: A list of Note objects corresponding to the notes belonging to the
+            specified user.
+    """
+
+    sql_command = """
+    SELECT id, title, content, user_id
+    FROM notes
+    WHERE user_id = ?;
+    """
+
+    notes = db.db_fetch_all(sql_command, [user.id])
+    return [Note(*note, user=user) for note in notes]

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+<!---->
+
+{% block title %} Virhe {% endblock %}
+
+<!---->
+
+{% block content %}
+<!---->
+<section class="error-page">
+    <p class="error-page__backdrop">{{code or ""}}</p>
+    <h1 class="error-page__heading">{{message}}</h1>
+    <a href="/" class="button button--large">Palaa etusivulle</a>
+</section>
+<!---->
+
+{% endblock %}

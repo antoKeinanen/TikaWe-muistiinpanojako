@@ -4,6 +4,7 @@ import routes.index_route
 import routes.note_route
 import routes.search_route
 import routes.comment_route
+import routes.user_route
 from util.config import parse_config
 from injectors.error_injector import inject_errors
 from injectors.field_injector import inject_fields
@@ -24,6 +25,7 @@ app.add_url_rule("/signout", view_func=routes.auth_route.signout_action)
 app.add_url_rule("/note/create", view_func=routes.note_route.create_note_page)
 app.add_url_rule("/note/<int:note_id>", view_func=routes.note_route.view_note_page)
 app.add_url_rule("/note/<int:note_id>/edit", view_func=routes.note_route.edit_note_page)
+app.add_url_rule("/user/<string:username>", view_func=routes.user_route.user_page)
 
 app.add_url_rule(
     "/api/signup",

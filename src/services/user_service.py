@@ -1,6 +1,7 @@
 import sqlite3
 from werkzeug.security import generate_password_hash
 from models.user import User
+from models.statistics import Statistics
 import util.database as db
 import secrets
 
@@ -92,3 +93,23 @@ def get_user_by_token(token: str):
     if not user:
         return None, "Token ei vastaa käyttäjää"
     return User(*user[0]), None
+
+
+def get_user_statistics(user: User):
+    """
+    Get statistical data for a given user.
+
+    Arguments:
+        user (User): An instance of the User class containing the user ID.
+
+    Returns:
+        Statistics: An instance of the Statistics class
+    """
+    sql_command = """
+    SELECT
+    (SELECT COUNT(*) FROM notes WHERE user_id = ?),
+    (SELECT COUNT(*) FROM comments WHERE user_id = ?)
+    """
+
+    statistics = db.db_fetch(sql_command, [user.id, user.id])
+    return Statistics(*statistics[0])

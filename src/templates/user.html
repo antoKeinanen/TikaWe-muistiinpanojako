@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+<!---->
+
+{% block title %} {{user.username}} {% endblock %}
+
+<!---->
+
+{% block content %}
+<!---->
+<section class="user-page">
+    <h1 class="user-page__heading">{{user.username}}</h1>
+    <div class="user-page__statistics">
+        <p class="user-page__statistic">
+            Muistiinpanoja: {{statistics.note_count}}
+        </p>
+        <p>•</p>
+        <p class="user-page__statistic">
+            Kommentteja: {{statistics.comment_count}}
+        </p>
+    </div>
+</section>
+
+<hr class="divider" />
+
+{% if notes %}
+<section class="note-grid">
+    {% for note in notes %}
+    <a href="/note/{{note.id}}">
+        <div class="card note-grid__card">
+            <p class="note-grid__title">{{note.title}}</p>
+            <p class="note-card__author">
+                Kirjoittanut: {{note.user.username}}
+            </p>
+        </div>
+    </a>
+    {% endfor %}
+</section>
+{% else %}
+<div class="note-grid__not-found">
+    <h1 class="note-grid__not-found__heading">
+        Tällä käyttäjällä ei ole vielä yhtään muistiinpanoa
+    </h1>
+</div>
+{% endif %}
+<!---->
+
+{% endblock %}
