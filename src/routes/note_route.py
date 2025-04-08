@@ -39,7 +39,11 @@ def view_note_page(note_id: int):
 
     note, error = note_service.get_note_by_id(note_id)
     if error:
-        return flash_errors(error, "index_page")
+        return flask.render_template(
+            "error.html",
+            message=error,
+            code="404",
+        )
 
     comments = comment_service.get_note_comments(note_id)
     user: User = flask.request.user
