@@ -57,7 +57,7 @@ def view_note_page(note_id: int):
 
 
 @login_required
-@csrf.validate("index_page")
+@csrf.validate()
 def delete_note_action(note_id: int):
     """Handle the action to delete a specific note."""
 
@@ -77,7 +77,7 @@ def delete_note_action(note_id: int):
 
 
 @login_required
-@csrf.validate("index_page")
+@csrf.validate()
 @flash_fields
 def update_note_action(note_id: int):
     """Handle the action to update a specific note."""
@@ -102,7 +102,7 @@ def update_note_action(note_id: int):
 
 
 @login_required
-@csrf.validate("index_page")
+@csrf.validate()
 @flash_fields
 def create_note_action():
     """Handle the action to create a new note."""
