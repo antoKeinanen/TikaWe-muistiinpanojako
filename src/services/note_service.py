@@ -1,9 +1,10 @@
 import util.database as db
 from models.note import Note
 from models.user import User
+from models.tag import Tag
 
 
-def create_note(title: str, content: str, user_id: str):
+def create_note(title: str, content: str, user_id: str, tags: list[str]):
     """
     Create a new note with the given title, content, and user ID.
 
@@ -11,6 +12,7 @@ def create_note(title: str, content: str, user_id: str):
         title (str): The title of the note.
         content (str): The content of the note.
         user_id (str): The ID of the user creating the note.
+        tags (list[str]): The list of tags associated with the note.
 
     Returns:
         int (optional): The last affected row id
@@ -22,7 +24,18 @@ def create_note(title: str, content: str, user_id: str):
     VALUES (?, ?, ?);
     """
 
-    return db.db_execute(sql_command, [title, content, user_id])
+    note_id = db.db_execute(sql_command, [title, content, user_id])
+
+    sql_command = """
+    INSERT
+    INTO tags (label, note_id)
+    VALUES (?, ?);
+    """
+
+    for tag in tags:
+        db.db_execute(sql_command, [tag, note_id])
+
+    return note_id
 
 
 def get_note_by_id(note_id: int):
@@ -58,7 +71,7 @@ def get_note_by_id(note_id: int):
     return Note(*note_data[0:4], user), None
 
 
-def update_note_by_id(note_id: int, title: str, content: str):
+def update_note_by_id(note_id: int, title: str, content: str, tags: list[str]):
     """
     Update the title and content of a note by its ID.
 
@@ -66,6 +79,7 @@ def update_note_by_id(note_id: int, title: str, content: str):
         note_id (int): The ID of the note to update.
         title (str): The new title of the note.
         content (str): The new content of the note.
+        tags (list[str]): List of tags associated with the post.
     """
 
     sql_command = """
@@ -75,8 +89,21 @@ def update_note_by_id(note_id: int, title: str, content: str):
         content = ?
     WHERE id = ?;
     """
-
     db.db_execute(sql_command, [title, content, note_id])
+
+    sql_command = """
+    DELETE FROM tags
+    WHERE note_id = ?;
+    """
+    db.db_execute(sql_command, [note_id])
+
+    sql_command = """
+    INSERT
+    INTO tags (label, note_id)
+    VALUES (?, ?);
+    """
+    for tag in tags:
+        db.db_execute(sql_command, [tag, note_id])
 
 
 def delete_note_by_id(note_id: int):
@@ -176,3 +203,25 @@ def get_notes_by_user(user: User):
 
     notes = db.db_fetch_all(sql_command, [user.id])
     return [Note(*note, user=user) for note in notes]
+
+
+def get_tags_by_note(note: Note):
+    """
+    Retrieve all tags associated with the specified note.
+
+    Arguments:
+        note (Note): The note object for which to retrieve tags.
+
+    Returns:
+        List[Tag]: A list of Tag objects corresponding to the tags associated
+            with the note.
+    """
+
+    sql_command = """
+    SELECT id, label
+    FROM tags
+    WHERE note_id = ?;
+    """
+
+    tags = db.db_fetch_all(sql_command, [note.id])
+    return [Tag(*tag) for tag in tags]

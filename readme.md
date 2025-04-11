@@ -111,7 +111,7 @@ invoke format
 -   [x] Käyttäjä näkee toisen käyttäjän käyttäjäsivun
 -   [x] Käyttäjäsivulla näkyy kaikki toisen käyttäjän muistiinpanot
 -   [x] Käyttäjäsivulla näkyy tilastoja toisesta käyttäjästä
--   [ ] Käyttäjä voi lisätä yhden tai useamman aiheen muistiinpanolle
+-   [x] Käyttäjä voi lisätä yhden tai useamman aiheen muistiinpanolle
 -   [ ] Käyttäjä voi hakea muistiinpanoja aiheen perusteella
 
 ## Tekoälyn käyttö raportti

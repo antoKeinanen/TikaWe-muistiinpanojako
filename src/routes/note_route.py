@@ -6,6 +6,7 @@ from services import note_service, comment_service
 from util.error import flash_errors
 from decorators.flash_fields import flash_fields
 from decorators.login_required import login_required
+import re
 
 
 @login_required
@@ -29,7 +30,14 @@ def edit_note_page(note_id: int):
         error = "Sinulla ei ole oikeutta muokata tätä muistiinpanoa"
         return flash_errors(error, "view_note_page", note_id=note_id)
 
-    return flask.render_template("notes/edit_note.html", note=note)
+    tags = note_service.get_tags_by_note(note)
+    tags = ", ".join([tag.label for tag in tags])
+
+    return flask.render_template(
+        "notes/edit_note.html",
+        note=note,
+        tags=tags,
+    )
 
 
 @login_required
@@ -46,6 +54,7 @@ def view_note_page(note_id: int):
         )
 
     comments = comment_service.get_note_comments(note_id)
+    tags = note_service.get_tags_by_note(note)
     user: User = flask.request.user
 
     return flask.render_template(
@@ -53,6 +62,7 @@ def view_note_page(note_id: int):
         note=note,
         is_creator=user.id == note.user_id,
         comments=comments,
+        tags=tags,
     )
 
 
@@ -82,10 +92,10 @@ def delete_note_action(note_id: int):
 def update_note_action(note_id: int):
     """Handle the action to update a specific note."""
 
-    title, content = _get_form_data()
-    errors = _validate_note(title, content)
+    title, content, tags = _get_form_data()
+    errors = _validate_note(title, content, tags)
     if errors:
-        return flash_errors(errors, "create_note_page")
+        return flash_errors(errors, "edit_note_page")
 
     user: User = flask.request.user
     note, error = note_service.get_note_by_id(note_id)
@@ -96,7 +106,7 @@ def update_note_action(note_id: int):
         error = "Sinulla ei ole oikeutta muokata tätä muistiinpanoa"
         return flash_errors(error, "view_note_page", note_id=note_id)
 
-    note_service.update_note_by_id(note_id, title, content)
+    note_service.update_note_by_id(note_id, title, content, tags)
 
     return flask.redirect(flask.url_for("view_note_page", note_id=note_id))
 
@@ -107,13 +117,13 @@ def update_note_action(note_id: int):
 def create_note_action():
     """Handle the action to create a new note."""
 
-    title, content = _get_form_data()
-    errors = _validate_note(title, content)
+    title, content, tags = _get_form_data()
+    errors = _validate_note(title, content, tags)
     if errors:
         return flash_errors(errors, "create_note_page")
 
     user: User = flask.request.user
-    new_note_id = note_service.create_note(title, content, user.id)
+    new_note_id = note_service.create_note(title, content, user.id, tags)
 
     next_url = flask.url_for("view_note_page", note_id=new_note_id)
     return flask.redirect(next_url)
@@ -136,25 +146,29 @@ def _check_is_creator(note: Note, user: User):
 
 def _get_form_data():
     """
-    Retrieve form data for title, and content.
+    Retrieve form data for title, content, and tags.
 
     Returns:
-        tuple: A tuple containing the title, and content.
+        tuple: A tuple containing the title, content, and a list of tags.
     """
 
     title = flask.request.form.get("title")
     content = flask.request.form.get("content")
 
-    return title, content
+    tags = flask.request.form.get("tags", "").split(",")
+    tags = [re.sub(r"\s", "", tag) for tag in tags if len(tag)] or []
+
+    return title, content, tags
 
 
-def _validate_note(title: str, content: str):
+def _validate_note(title: str, content: str, tags: list[str]):
     """
     Validate the title and content of a note.
 
     Args:
         title (str): The title of the note to be validated.
         content (str): The content of the note to be validated.
+        tags (list[str]): List of tags associated with the note.
 
     Returns:
         list: A list of error messages indicating any validation failures.
@@ -174,5 +188,20 @@ def _validate_note(title: str, content: str):
         errors.append("Muistiinpanossa on oltava tekstiä")
     elif len(content) > 10_000:
         errors.append("Muistiinpanon on oltava alle 10 000 merkkiä pitkä")
+
+    if len(tags) > 32:
+        errors.append("Tageja voi olla enintään 32 kappaletta")
+    tag_errors = [
+        f"Tagi '{tag}' voi sisältää vain kirjaimia, numeroita ja viivoja"
+        for tag in tags
+        if not re.match(r"^[A-ZÅÄÖa-zåäö0-9-]+$", tag)
+    ]
+    errors.extend(tag_errors)
+    tag_errors = [
+        f"Tagi '{tag}' voi olla enintään 32 merkkiä pitkä"
+        for tag in tags
+        if len(tag) > 32
+    ]
+    errors.extend(tag_errors)
 
     return errors

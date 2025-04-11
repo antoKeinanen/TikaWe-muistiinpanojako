@@ -32,6 +32,22 @@
             </div>
 
             <div class="input__container">
+                <label for="tags">Tagit</label>
+                <input
+                    type="text"
+                    class="input__text"
+                    name="tags"
+                    id="tags"
+                    value="{{tags}}"
+                />
+                <p class="input__description">
+                    Voi jättää tyhjäksi. Tagit voivat sisältää vain kirjaimia,
+                    numeroita ja viivoja, sekä niiden välissä tulee olla pilkku.
+                    Esim: Matematiikka, Raja-arvot
+                </p>
+            </div>
+
+            <div class="input__container">
                 <label class="input__label" for="username">Muistiinpanot</label>
                 <textarea
                     class="input__text"

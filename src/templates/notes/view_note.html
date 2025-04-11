@@ -20,6 +20,14 @@
             >
                 {{note.user.username}}
             </a>
+            <div class="view-note__tags">
+                {% for tag in tags %}
+                <div class="view-note__tag">
+                    <i class="fa-solid fa-hashtag view-note__tag__icon"></i>
+                    <p class="view-note__tag__label">{{tag.label}}</p>
+                </div>
+                {% endfor %}
+            </div>
         </div>
         {% if is_creator %}
         <div class="popover">

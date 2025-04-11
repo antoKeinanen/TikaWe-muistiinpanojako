@@ -436,6 +436,7 @@ a {
 
 .note__card {
     width: 48rem;
+    margin-block: 4rem;
 }
 
 .view-note {
@@ -471,6 +472,23 @@ a {
     display: flex;
     gap: 0.5rem;
     padding-block: 1rem;
+}
+
+.view-note__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.view-note__tag {
+    display: flex;
+    gap: 0.25rem;
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+    align-items: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
 }
 
 .divider {
