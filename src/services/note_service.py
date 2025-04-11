@@ -163,7 +163,7 @@ def get_note_by_query(query: str, limit: int = 10, offset: int = 0):
     """  # noqa: E501
 
     sql_command = """
-    SELECT
+    SELECT DISTINCT
         notes.id AS note_id,
         notes.title,
         notes.content,
@@ -171,14 +171,15 @@ def get_note_by_query(query: str, limit: int = 10, offset: int = 0):
         users.username
     FROM notes
     JOIN users ON notes.user_id = users.id
-    WHERE notes.title
-        LIKE ?
+    JOIN tags ON notes.id = tags.note_id
+    WHERE notes.title LIKE ?
+        OR tags.label LIKE ?
     ORDER BY notes.created_at DESC
     LIMIT ?
     OFFSET ?
     """
 
-    notes = db.db_fetch_all(sql_command, [f"%{query}%", limit, offset])
+    notes = db.db_fetch_all(sql_command, [f"%{query}%", f"%{query}%", limit, offset])
     return [Note(*note) for note in notes]
 
 
