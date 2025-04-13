@@ -9,7 +9,7 @@ from util.config import parse_config
 from injectors.error_injector import inject_errors
 from injectors.field_injector import inject_fields
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="static")
 
 config = parse_config()
 app.secret_key = config["CSRF_SECRET"]
