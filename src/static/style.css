@@ -550,16 +550,25 @@ a {
 
 .note-grid {
     display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    flex-wrap: wrap;
     gap: 1rem;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
     padding-inline: 16rem;
     padding-block: 2rem;
-    align-items: start;
     padding: 1rem 2rem;
+}
+
+.note-grid__card {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .note-grid__title {
     font-weight: bold;
+    text-align: center;
+    width: 100%;
 }
 
 .error-page {
