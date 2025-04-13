@@ -7,7 +7,9 @@ from util.nimet import etunimet, sukunimet
 import itertools
 import random
 
-USER_COUNT = 10
+random.seed(200)
+
+USER_COUNT = 100_000
 NOTE_COUNT = USER_COUNT * 5
 TAG_COUNT = NOTE_COUNT * 3
 COMMENT_COUNT = NOTE_COUNT * 5
