@@ -171,6 +171,7 @@ def signin_action():
 -   Rekisteröityminen: 0.361
 -   Muistiinpanon haku termillä "a": 1.444
 -   Muistiinpanon luonti: 0.019
+-   Käyttäjäsivu: 0.289
 
 ## Lisenssi
 
