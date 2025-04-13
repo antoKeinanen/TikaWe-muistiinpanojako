@@ -161,6 +161,17 @@ def signin_action():
 
 ```
 
+## Käyttö suurella tietomäärällä
+
+### Ennen indeksejä
+
+-   Etusivun lataus: 0.604
+-   Muistiinpanon päivitys: 0.068
+-   Sisäänkirjautuminen: 0.340
+-   Rekisteröityminen: 0.361
+-   Muistiinpanon haku termillä "a": 1.444
+-   Muistiinpanon luonti: 0.019
+
 ## Lisenssi
 
 Jaetaan MIT-lisenssin mukaisesti. Katso lisätietoja `LICENSE`-tiedostosta.
