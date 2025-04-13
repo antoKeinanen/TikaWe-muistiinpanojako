@@ -25,7 +25,7 @@ def user_page(username: str):
         return flash_errors("Virheellinen sivunumero", "index_page", page="1")
 
     page = int(page)
-    limit = 40
+    limit = 24
     offset = limit * (page - 1)
 
     notes = note_service.get_notes_by_user(user, limit, offset)
