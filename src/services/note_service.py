@@ -128,7 +128,7 @@ def get_recent_notes(limit: int = 10, offset: int = 0):
         offset (int, optional): The number of notes to skip before starting to retrieve. Defaults to 0.
 
     Returns:
-        list: A list of Note objects.
+        tuple: A tuple containing a list of Note objects and the total count of notes.
     """  # noqa: E501
 
     sql_command = """
@@ -146,7 +146,12 @@ def get_recent_notes(limit: int = 10, offset: int = 0):
     """
 
     notes = db.db_fetch_all(sql_command, [limit, offset])
-    return [Note(*note) for note in notes]
+
+    sql_command = "SELECT COUNT(*) FROM notes"
+    note_count = db.db_fetch(sql_command, [])
+    note_count = note_count[0][0]
+
+    return [Note(*note) for note in notes], note_count
 
 
 def get_note_by_query(query: str, limit: int = 10, offset: int = 0):
@@ -156,11 +161,12 @@ def get_note_by_query(query: str, limit: int = 10, offset: int = 0):
     Args:
         query (str): The search query to filter notes by title.
         limit (int, optional): The maximum number of notes to retrieve. Defaults to 10.
-        offset (int, optional): The number of notes to skip before starting to retrieve. Defaults to 0.
+        offset (int, optional): The number of notes to skip before starting to retrieve.
+            Defaults to 0.
 
     Returns:
         list: A list of Note objects.
-    """  # noqa: E501
+    """
 
     sql_command = """
     SELECT DISTINCT
@@ -179,17 +185,34 @@ def get_note_by_query(query: str, limit: int = 10, offset: int = 0):
     OFFSET ?
     """
 
-    notes = db.db_fetch_all(sql_command, [f"%{query}%", f"%{query}%", limit, offset])
-    return [Note(*note) for note in notes]
+    query = f"%{query}%"
+
+    notes = db.db_fetch_all(sql_command, [query, query, limit, offset])
+
+    sql_command = """
+    SELECT count(DISTINCT notes.id)
+    FROM notes
+    JOIN tags ON notes.id = tags.note_id
+    WHERE
+        notes.title LIKE ?
+        OR tags.label LIKE ?
+    """
+    note_count = db.db_fetch(sql_command, [query, query])
+    note_count = note_count[0][0]
+
+    return [Note(*note) for note in notes], note_count
 
 
-def get_notes_by_user(user: User):
+def get_notes_by_user(user: User, limit: int = 10, offset: int = 0):
     """
     Get all note records associated with the given user.
 
     Arguments:
         user (User): The user for whom the notes are to be retrieved.
             The user object must have an 'id' attribute.
+        limit (int, optional): The maximum number of notes to retrieve. Defaults to 10.
+        offset (int, optional): The number of notes to skip before starting to retrieve.
+            Defaults to 0.
 
     Returns:
         List[Note]: A list of Note objects corresponding to the notes belonging to the
@@ -199,10 +222,13 @@ def get_notes_by_user(user: User):
     sql_command = """
     SELECT id, title, content, user_id
     FROM notes
-    WHERE user_id = ?;
+    WHERE user_id = ?
+    ORDER BY created_at DESC
+    LIMIT ?
+    OFFSET ?
     """
 
-    notes = db.db_fetch_all(sql_command, [user.id])
+    notes = db.db_fetch_all(sql_command, [user.id, limit, offset])
     return [Note(*note, user=user) for note in notes]
 
 
