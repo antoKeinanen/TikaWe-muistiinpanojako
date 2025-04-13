@@ -47,7 +47,7 @@
             </div>
 
             <input
-                type="text"
+                type="hidden"
                 name="csrf_token"
                 id="csrf_token"
                 value="{{session.csrf_token}}"
@@ -55,7 +55,7 @@
             />
 
             <input
-                type="text"
+                type="hidden"
                 name="next"
                 id="next"
                 value="{{request.args.get('next', '')}}"
@@ -67,14 +67,16 @@
                 type="submit"
                 value="Kirjaudu sisään"
             />
-
-            <a
-                href="{{url_for('signup_page')}}?next={{request.args.get('next', '')}}"
-                class="auth__swap"
-            >
-                Ei käyttäjää? <span class="link">Rekisteröidy nyt!</span>
-            </a>
         </form>
+
+        <hr hidden />
+
+        <a
+            href="{{url_for('signup_page')}}?next={{request.args.get('next', '')}}"
+            class="auth__swap"
+        >
+            Ei käyttäjää? <span class="link">Rekisteröidy nyt!</span>
+        </a>
     </section>
 </div>
 {% endblock %}

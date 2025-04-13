@@ -19,32 +19,41 @@
     </a>
     {% endfor %}
 </section>
-<div class="pagination">
-    <a
-        class="button button--secondary pagination__button {{'' if pagination.left_arrow else 'pagination__button--hidden'}}"
-        href="{{url_for('index_page', page=page-1)}}"
-    >
-        <i class="fa-solid fa-angle-left"></i>
-    </a>
+<hr hidden />
+<ul class="pagination">
+    <li>
+        <a
+            class="button button--secondary pagination__button {{'' if pagination.left_arrow else 'pagination__button--hidden'}}"
+            href="{{url_for('index_page', page=page-1)}}"
+        >
+            <label hidden>Seuraava sivu</label>
+            <i aria-label="Seuraava sivu" class="fa-solid fa-angle-left"></i>
+        </a>
+    </li>
     <div class="pagination__numbers">
         {% for number in pagination.numbers %} {% if number == "..." %}
         <p>...</p>
         {% else %}
-        <a
-            href="{{url_for('index_page', page=number)}}"
-            class="button pagination__button {{'' if number == pagination.active_page else 'button--ghost'}}"
-        >
-            {{number}}
-        </a>
+        <li>
+            <a
+                href="{{url_for('index_page', page=number)}}"
+                class="button pagination__button {{'' if number == pagination.active_page else 'button--ghost'}}"
+            >
+                {{number}}
+            </a>
+        </li>
         {% endif %} {% endfor %}
     </div>
-    <a
-        class="button button--secondary pagination__button {{'' if pagination.right_arrow else 'pagination__button--hidden'}}"
-        href="{{url_for('index_page', page=page+1)}}"
-    >
-        <i class="fa-solid fa-angle-right"></i>
-    </a>
-</div>
+    <li>
+        <a
+            class="button button--secondary pagination__button {{'' if pagination.right_arrow else 'pagination__button--hidden'}}"
+            href="{{url_for('index_page', page=page+1)}}"
+        >
+            <label hidden>Edellinen sivu</label>
+            <i aria-label="Edellinen sivu" class="fa-solid fa-angle-right"></i>
+        </a>
+    </li>
+</ul>
 {% else %}
 <div class="note-grid__not-found">
     <h1 class="note-grid__not-found__heading">Haullasi ei löytynyt mitään!</h1>

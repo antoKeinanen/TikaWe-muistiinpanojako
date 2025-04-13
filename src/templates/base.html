@@ -36,6 +36,7 @@
                     {% if session["signed_in"] %}
                     <li class="navigation-bar__search">
                         <form action="/search" method="get">
+                            <label hidden for="query">Hakusana</label>
                             <input
                                 class="input__text navigation-bar__search-input"
                                 id="query"
@@ -68,9 +69,9 @@
                     </li>
                     {% endif %}
                 </ul>
+                <hr hidden />
             </nav>
         </header>
-        <main class="main-content">{% block content %} {% endblock %}</main>
         <div class="error__container">
             {% for i, error in errors %}
             <div
@@ -84,12 +85,16 @@
                     name="hide"
                     id="hide-{{i}}"
                     checked
+                    aria-hidden="true"
                 />
-                <label class="error__close" for="hide-{{i}}">
+                <label class="error__close" for="hide-{{i}}" aria-hidden="true">
                     <i class="fa-solid fa-xmark"></i>
                 </label>
             </div>
             {% endfor %}
         </div>
+        <hr hidden />
+
+        <main class="main-content">{% block content %} {% endblock %}</main>
     </body>
 </html>
