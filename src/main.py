@@ -28,14 +28,14 @@ def after_request(response):  # noqa: ANN001, D103
     profiler: Profiler = g.profiler
     profiler.stop()
     html = profiler.output_html()
-    timestamp = datetime.now().strftime("%Y%m%d%H%M%S%f")  # noqa: DTZ005
-    request_id = request.headers.get("X-Request-ID", "unknown")
-    filename = f"profile_{request_id}_{timestamp}.html"
+    request_time = datetime.now().strftime("%Y%m%d_%H%M%S")  # noqa: DTZ005
+    request_path = request.path.strip("/").replace("/", "_") or "root"
+    filename = f"profile_{request_time}_{request_path}.html"
     output_dir = os.path.join(os.getcwd(), "profiles")  # noqa: PTH109, PTH118
     os.makedirs(output_dir, exist_ok=True)  # noqa: PTH103
-    filepath = os.path.join(output_dir, filename)  # noqa: PTH118
-    with open(filepath, "w") as file:
-        file.write(html)
+    file_path = os.path.join(output_dir, filename)  # noqa: PTH118
+    with open(file_path, "w") as f:
+        f.write(html)
     return response
 
 
