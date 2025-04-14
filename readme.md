@@ -163,15 +163,80 @@ def signin_action():
 
 ## Käyttö suurella tietomäärällä
 
-### Ennen indeksejä
+### Ennen optimointia
 
--   Etusivun lataus: 0.604
--   Muistiinpanon päivitys: 0.068
--   Sisäänkirjautuminen: 0.340
--   Rekisteröityminen: 0.361
--   Muistiinpanon haku termillä "a": 1.444
--   Muistiinpanon luonti: 0.019
--   Käyttäjäsivu: 0.289
+-   Rekisteröityminen: 0.353s
+    -   Salasanan hash-arvon generointi: 0.346s
+    -   Tietokantaan kirjoitus: 0.007s
+-   Etusivu: 9.069s
+    -   Kirjautumisen tarkistus: 0.420s
+    -   Sivulla näkyvien muistiinpanojen haku: 8.306s
+    -   Kaikkien muistiinpanojen laskeminen: 0.334s
+    -   Sivupohjan täyttäminen: 0.009s
+-   Yksittäinen muistiinpano: 3.502s
+    -   Kirjautumisen tarkistus: 0.063s
+    -   Muistiinpanon sisällön haku: 0.003s
+    -   Muistiinpanon kommenttien haku: 2.825
+    -   Muistiinpanon tagien hakeminen: 0.911s
+    -   Sivupohjan täyttäminen: 0.008s
+-   Käyttäjäsivu: 4.137s
+    -   Kirjautumisen tarkistus: 0.063s
+    -   Sivulla näkyvien muistiinpanojen haku: 1.224s
+    -   Käyttäjän tilastojen haku: 2.842s
+    -   Sivupohjan täyttäminen: 0.008s
+-   Uuden muistiinpanon luominen: 0.094s
+    -   Kirjautumisen tarkistus: 0.064
+    -   Muistiinpanon kirjoitus tietokantaan: 0.029s
+-   Muistiinpanojen haku termillä "a": 17.260s
+    -   Kirjautumisen tarkistus: 0.064s
+    -   Sivulla näkyvien muistiinpanojen haku: 14.797s
+    -   Haun täyttävien muistiinpanojen laskeminen: 2.392s
+    -   Sivupohjan täyttäminen: 0.008s
+-   Sisäänkirjautuminen: 0.339s
+-   Muistiinpanon poistaminen: 5.753s
+    -   Kirjautumisen tarkistus: 0.065s
+    -   Muistiinpanon poisto tietokannasta: 5.688s
+
+### Päätelmät
+
+Tutkimalla palvelimelta kerättyjä aika profiileja voidaan havaita, että sovelluksen suurin pullonkaula on tietokanta ja erityisesti kyselyt, joissa joudutaan lukemaan suuri määrä tietoa. Tämä voidaan korjata lisäämällä tietokantaan indeksejä.
+
+### Indeksien jälkeen
+
+-   Rekisteröityminen: 0.426s
+    -   Kirjautumisen tarkistus: 0.004s
+    -   Salasanan hash-arvon generointi: 0.409s
+    -   Tietokantaan kirjoitus: 0.017s
+-   Etusivu: 0.378s
+    -   Kirjautumisen tarkistus: 0.004s
+    -   Sivulla näkyvien muistiinpanojen haku: 0.369s
+    -   Sivupohjan täyttäminen: 0.008s
+-   Yksittäinen muistiinpano: 0.017s
+    -   Kirjautumisen tarkistus: 0.004s
+    -   Muistiinpanon sisällön haku: 0.003s
+    -   Muistiinpanon kommenttien haku: 0.004s
+    -   Muistiinpanon tagien hakeminen: 0.002s
+    -   Sivupohjan täyttäminen: 0.004s
+-   Käyttäjäsivu: 11.8s
+    -   Kirjautumisen tarkistus: 0.003s
+    -   Sivulla näkyvien muistiinpanojen haku: 8.225s
+    -   Käyttäjän tilastojen haku: 3.623s
+    -   Sivupohjan täyttäminen: 0.018s
+-   Uuden muistiinpanon luominen: 0.034s
+-   Muistiinpanojen haku termillä "a": 3.316s
+    -   Sivulla näkyvien muistiinpanojen haku: 0.005s
+    -   Haun täyttävien muistiinpanojen laskeminen: 3.303
+    -   Sivupohjan täyttäminen: 0.008
+-   Sisäänkirjautuminen:
+    -   Käyttäjän haku tietokannasta: 0.023s
+    -   Salasanan hash-arvon validointi: 0.385s
+-   Muistiinpanon poistaminen: 0.010s
+    -   Kirjautumisen tarkistus: 0.004s
+    -   Muistiinpanon poisto tietokannasta: 0.006s
+
+### Päätelmät
+
+Indeksit selvästi paransivat sovelluksen nopeutta. Toisaalta käyttäjäsivun lataaminen hidastui. Lisäksi haut, jotka laskevat jotakin vievät vielä liian pitkän ajan.
 
 ## Lisenssi
 
