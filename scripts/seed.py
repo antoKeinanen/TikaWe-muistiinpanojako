@@ -1,9 +1,9 @@
-from pathlib import Path
-import json
 import secrets
 import sqlite3
+from util.generate_config import generate_config
 from util.sanalista import sanalista
 import random
+from pathlib import Path
 
 random.seed(200)
 
@@ -12,13 +12,8 @@ NOTE_COUNT = 5_000_000
 TAG_COUNT = 3_000_000
 COMMENT_COUNT = 15_000_000
 
-Path("config.json").unlink(missing_ok=True)
+generate_config()
 
-with open("config.json", "w") as file:
-    config = {
-        "CSRF_SECRET": secrets.token_urlsafe(32),
-    }
-    json.dump(config, file)
 
 with open("scripts/sql/init.sql") as file:
     db_init_script = file.read()

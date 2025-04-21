@@ -5,7 +5,7 @@ import routes.note_route
 import routes.search_route
 import routes.comment_route
 import routes.user_route
-from util.config import parse_config
+from util.config import config
 from injectors.error_injector import inject_errors
 from injectors.field_injector import inject_fields
 from pyinstrument import Profiler
@@ -39,8 +39,7 @@ def after_request(response):  # noqa: ANN001, D103
     return response
 
 
-config = parse_config()
-app.secret_key = config["CSRF_SECRET"]
+app.secret_key = config.csrf_secret
 
 app.context_processor(inject_errors)
 app.context_processor(inject_fields)
