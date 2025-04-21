@@ -103,10 +103,10 @@ def get_user_statistics(user: User):
         Statistics: An instance of the Statistics class
     """
     sql_command = """
-    SELECT
-    (SELECT COUNT(*) FROM notes WHERE user_id = ?),
-    (SELECT COUNT(*) FROM comments WHERE user_id = ?)
+    SELECT note_count, comment_count
+    FROM user_statistics
+    WHERE user_id = ?;
     """
 
-    statistics = db.db_fetch(sql_command, [user.id, user.id])
+    statistics = db.db_fetch(sql_command, [user.id])
     return Statistics(*statistics[0])

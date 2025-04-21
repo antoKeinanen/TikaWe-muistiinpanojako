@@ -197,7 +197,24 @@ GET /signout took 0.009 seconds
 POST /api/signin took 0.395 seconds
 ```
 
-Indeksit selvästi paransivat sovelluksen nopeutta. Tavoitteenani kuitenkin olisi saada kaikki sivut lataamaan noin sekunnissa. Palvelimelta kerätyistä aikaprofiileista voidaan päätellä, että pullonkaulana ovat `get_user_statistics` ja `get_note_by_query` funktiot.
+Indeksit selvästi paransivat sovelluksen nopeutta. Tavoitteenani kuitenkin olisi saada kaikki sivut lataamaan noin sekunnissa. Palvelimelta kerätyistä aikaprofiileista voidaan päätellä, että pullonkaulana ovat `get_user_statistics` ja `get_note_by_query` funktiot. Tilastojen laskennassa voidaan hyödyntää triggereitä tunnistamaan milloin käyttäjä luo tai poistaa muistiinpanoja ja kommentteja, jolloin tietokanta voi säilöä tilastot erillisessä taulussa. 
+
+### Triggerien jälkeen
+
+```
+POST /api/signup took 0.413 seconds
+GET / took 0.047 seconds
+GET /note/1 took 0.012 seconds
+GET /user/User1 took 0.014 seconds
+POST /api/note/new took 0.020 seconds
+POST /api/note/5000007/update took 0.030 seconds
+POST /api/note/5000007/delete took 0.058 seconds
+GET /search?query=a took 1.919 seconds
+GET /signout took 0.009 seconds
+POST /api/signin took 0.387 seconds
+```
+
+
 
 ## Lisenssi
 
