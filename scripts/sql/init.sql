@@ -41,7 +41,7 @@ CREATE INDEX idx_users_username ON users (username);
 
 CREATE INDEX idx_users_token ON users (token);
 
-CREATE INDEX idx_notes_user_id ON notes (created_at);
+CREATE INDEX idx_notes_user_id ON notes (user_id);
 
 CREATE INDEX idx_notes_created_at ON notes (created_at);
 

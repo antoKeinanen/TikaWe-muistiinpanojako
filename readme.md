@@ -185,16 +185,16 @@ Tutkimalla palvelimelta kerättyjä aikaprofiileja voidaan havaita, että sovell
 ### Indeksien jälkeen
 
 ```
-POST /api/signup took 0.699 seconds
-GET / took 0.049 seconds
-GET /note/1 took 0.003 seconds
-GET /user/User1 took 3.976 seconds
-POST /api/note/new took 0.020 seconds
-POST /api/note/5000002/update took 0.029 seconds
-POST /api/note/5000002/delete took 0.054 seconds
-GET /search?query=a took 1.950 seconds
-GET /signout took 0.004 seconds
-POST /api/signin took 0.405 seconds
+POST /api/signup took 0.437 seconds
+GET / took 0.048 seconds
+GET /note/1 took 0.013 seconds
+GET /user/User1 took 2.748 seconds
+POST /api/note/new took 0.022 seconds
+POST /api/note/5000001/update took 0.032 seconds
+POST /api/note/5000001/delete took 0.056 seconds
+GET /search?query=a took 2.894 seconds
+GET /signout took 0.009 seconds
+POST /api/signin took 0.395 seconds
 ```
 
 Indeksit selvästi paransivat sovelluksen nopeutta. Tavoitteenani kuitenkin olisi saada kaikki sivut lataamaan noin sekunnissa. Palvelimelta kerätyistä aikaprofiileista voidaan päätellä, että pullonkaulana ovat `get_user_statistics` ja `get_note_by_query` funktiot.
