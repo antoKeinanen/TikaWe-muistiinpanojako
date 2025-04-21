@@ -81,6 +81,8 @@ measure_step(
     method="POST",
 )
 
+measure_step("GET /search?query=a", f"{BASE_URL}/search?query=a")
+
 
 measure_step("GET /signout", f"{BASE_URL}/signout")
 
