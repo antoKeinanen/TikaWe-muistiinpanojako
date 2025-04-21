@@ -34,7 +34,7 @@ with sqlite3.connect("database.db") as db:
             (f"User{i}", password, token),
         )
 
-    for _ in range(NOTE_COUNT):
+    for i in range(NOTE_COUNT):
         if i % (NOTE_COUNT // 10) == 0:
             print(f"{i}/{NOTE_COUNT} notes added")
         user_id = random.randint(1, USER_COUNT)
