@@ -2,7 +2,7 @@
 
 <!---->
 
-{% block title %} Etusivu {% endblock %}
+{% block title %} Haku – {{query}} {% endblock %}
 
 <!---->
 
@@ -24,7 +24,7 @@
     <li>
         <a
             class="button button--secondary pagination__button {{'' if pagination.left_arrow else 'pagination__button--hidden'}}"
-            href="{{url_for('index_page', page=page-1)}}"
+            href="{{url_for('search_page', page=page-1, query=query)}}"
         >
             <label hidden>Seuraava sivu</label>
             <i aria-label="Seuraava sivu" class="fa-solid fa-angle-left"></i>
@@ -36,7 +36,7 @@
         {% else %}
         <li>
             <a
-                href="{{url_for('index_page', page=number)}}"
+                href="{{url_for('search_page', page=number, query=query)}}"
                 class="button pagination__button {{'' if number == pagination.active_page else 'button--ghost'}}"
             >
                 {{number}}
@@ -47,7 +47,7 @@
     <li>
         <a
             class="button button--secondary pagination__button {{'' if pagination.right_arrow else 'pagination__button--hidden'}}"
-            href="{{url_for('index_page', page=page+1)}}"
+            href="{{url_for('search_page', page=page+1, query=query)}}"
         >
             <label hidden>Edellinen sivu</label>
             <i aria-label="Edellinen sivu" class="fa-solid fa-angle-right"></i>
