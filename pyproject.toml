@@ -13,12 +13,7 @@ flask = "^3.1.0"
 
 [tool.poetry.group.dev.dependencies]
 ruff = "^0.11.0"
-pytest = "^8.3.5"
-invoke = "^2.2.0"
 pre-commit = "^4.1.0"
-selenium = "^4.29.0"
-pytest-xdist = "^3.6.1"
-pytest-random-order = "^1.1.1"
 
 [build-system]
 requires = ["poetry-core"]
@@ -50,6 +45,3 @@ lint.ignore = [
 "src/test/*" = ["D"]
 "scripts/*" = ["D", "S310", "T201"]
 
-[tool.pytest.ini_options]
-addopts = "-ra -q -n 4 --random-order"
-testpaths = ["src"]
