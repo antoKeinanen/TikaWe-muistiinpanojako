@@ -187,6 +187,8 @@ Restit suoritetaan automaattisesti `scripts/performance_test.py` scriptillä. Sk
 -   Kirjaudu ulos
 -   Kirjaudu sisään
 
+Aikaprofilointiin käytin pyinstrument kirjastoa ja version sovelluksesta, jossa kyseinen kirjasto oli vielä käytössä voi löytää [täältä](https://github.com/antoKeinanen/TikaWe-muistiinpanojako/blob/44e083accffa29f1eea15c37b9b11e73aa75c716/src/main.py#L18-L39).
+
 ### Ennen optimointia
 
 ```
