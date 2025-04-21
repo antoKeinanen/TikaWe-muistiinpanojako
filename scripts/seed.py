@@ -26,17 +26,17 @@ with sqlite3.connect("database.db") as db:
 
     for i in range(USER_COUNT):
         if i % (USER_COUNT // 10) == 0:
-            print(f"{i}/{USER_COUNT} users added")  # noqa: T201
+            print(f"{i}/{USER_COUNT} users added")
         password = secrets.token_urlsafe(32)
         token = secrets.token_urlsafe(32)
         cursor.execute(
             "INSERT INTO users (username, password_hash, token) VALUES (?, ?, ?)",
-            (f"Käyttäjä{i}", password, token),
+            (f"User{i}", password, token),
         )
 
     for _ in range(NOTE_COUNT):
         if i % (NOTE_COUNT // 10) == 0:
-            print(f"{i}/{NOTE_COUNT} notes added")  # noqa: T201
+            print(f"{i}/{NOTE_COUNT} notes added")
         user_id = random.randint(1, USER_COUNT)
         num_words = random.randint(5, 15)
         title = " ".join(random.choices(sanalista, k=2))
@@ -48,7 +48,7 @@ with sqlite3.connect("database.db") as db:
 
     for i in range(TAG_COUNT):
         if i % (TAG_COUNT // 10) == 0:
-            print(f"{i}/{TAG_COUNT} tags added")  # noqa: T201
+            print(f"{i}/{TAG_COUNT} tags added")
         note_id = random.randint(1, NOTE_COUNT)
         label = random.choice(sanalista)
         cursor.execute(
@@ -58,7 +58,7 @@ with sqlite3.connect("database.db") as db:
 
     for i in range(COMMENT_COUNT):
         if i % (COMMENT_COUNT // 10) == 0:
-            print(f"{i}/{COMMENT_COUNT} comments added")  # noqa: T201
+            print(f"{i}/{COMMENT_COUNT} comments added")
         user_id = random.randint(1, USER_COUNT)
         note_id = random.randint(1, NOTE_COUNT)
         num_words = random.randint(3, 20)
