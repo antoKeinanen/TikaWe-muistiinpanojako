@@ -24,77 +24,24 @@ git clone https://github.com/antoKeinanen/TikaWe-muistiinpanojako.git
 cd tikawe-muistiinpanojako
 
 # Asenna riippuvuudet
-pip install flask
+pip install flask==3.1.0
 ```
 
-### Vaihtoehtoinen asennus
-
-Sovellus on täysin toimiva vaikka käyttäisit yllä mainittuja asennus ohjeita. Oman kehittäjä kokemuksen parantamiseksi voidaan projektiin asentaa myös lisää riippuvuuksia poetryn avulla.
+## Käyttö
 
 ```bash
-# Lataa repositorio
-git clone https://github.com/antoKeinanen/TikaWe-muistiinpanojako.git
-cd tikawe-muistiinpanojako
-
-# Asenna riippuvuudet
-poetry install
-```
-
-## Sovelluksen käynnistys
-
-```bash
-# Alusta tietokanta
+# Alusta tietokanta ja generoi config tiedosto
 python scripts/setup.py
 
 # Käynnistä sovellus
 flask --app src/main run
 ```
 
-### Vaihtoehtoinen sovelluksen käynnistys
-
-Jos asensit sovelluksen poetryä käyttäen:
+### Kehitys
 
 ```bash
-# Alusta tietokanta
-invoke setup
-
-# Käynnistä sovellus
-invoke start
-
-# Jos tarkoituksena on kehittää tai muutella sovellusta
-invoke start -d
-```
-
-## Sovelluksen testaus ja laadunvarmistus
-
-Koska automatisoitu testaus ja -laadunvarmistus ei ole kurssin arvioinnin piirissä vaatii nämä toiminnot asennusta poetryllä.
-
-### Testaus
-
-VAROITUS: testaus poistaa kaikki tietokannassa olemassaolevat tiedot!
-
-```bash
-# Käynnistä sovellus
-invoke start
-
-# Aja testit toisessa terminaali-ikkunassa
-invoke test
-```
-
-### Lint
-
-Lint komennon avulla voidaan tunnistaa automaattisesti yleisiä virheitä koodikannasta.
-
-```bash
-invoke lint
-```
-
-### Formatointi
-
-Formatoi automaattisesti koko koodikannan yhtenäiseksi.
-
-```
-invoke format
+# Käynnistä sovellus kehitys tilassa
+flask --app src/main --debug run
 ```
 
 ## Ominaisuudet
@@ -117,56 +64,18 @@ invoke format
 -   [x] Käyttäjä voi laajentaa ja supistaa hakua erikoismerkeillä.
 
 ## Haku erikoismerkkien avulla
-Tavallisesti haku tapahtuu vain kokonaisten sanojen perusteella. Haut eivät ota huomioon isojen ja pienien merkkien eroa. Jos käyttäjä kuitenkin haluaa hakea vain sanan alku osalla voidaan käyttää `*` operaattoria. Esimerkiksi `Yks*` vastaisi sanoja `Yksi` ja `Yksitoista`. Merkillä `^` voidaan puolestaan rajata, että tekstin on alettava sanalla. Esimerkiksi `^kissa` vaatii, että joko sisältö tai otsikko alkaa sanalla kissa. 
 
-## Tekoälyn käyttö raportti
-
-Osa koodinkannan dokumentaatio kommenteista on kirjoitettu tekoälyn avulla. Dokumentaatio on kuitenkin aina ihmisen tarkistama ja korjaama.
-
-### Käytetty alustuskehote
-
-```
-You are a skilled senior software developer your task is to write docstrings for given python functions. Use the following example as guide:
-
----
-
-@csrf.validate("signin_page")
-@flash_fields
-def signin_action():
-    """
-    Handle the sign-in action, validating user credentials and responding
-    accordingly.
-
-    Retrieves form data, validates the credentials, and
-    checks the password against the stored hash. If there are any errors
-    during this process, appropriate error messages are flashed and the
-    user is redirected back to the sign-in page. On successful validation,
-    a token is generated and the user is redirected to the next page.
-
-    Returns:
-        Response: A Flask response object that either flashes errors and
-        redirects to the sign-in page or responds with a token and
-        redirects to the next page.
-    """
-
-    username, plain_password, next_page = _get_form_data()
-    errors = _validate_credentials(username, plain_password)
-    if errors:
-        return flash_errors(errors, "signin_page", next=next_page)
-
-    user, error = auth_service.get_user_by_username(username)
-    if error:
-        return flash_errors(error, "signin_page", next=next_page)
-
-    if not check_password_hash(user.password_hash, plain_password):
-        error = "Virheellinen käyttäjätunnus ja/tai salasana"
-        return flash_errors(error, "signin_page", next=next_page)
-
-    return _respond_with_token(user.token, next_page)
-
-```
+Tavallisesti haku tapahtuu vain kokonaisten sanojen perusteella. Haut eivät ota huomioon isojen ja pienien merkkien eroa. Jos käyttäjä kuitenkin haluaa hakea vain sanan alku osalla voidaan käyttää `*` operaattoria. Esimerkiksi `Yks*` vastaisi sanoja `Yksi` ja `Yksitoista`. Merkillä `^` voidaan puolestaan rajata, että tekstin on alettava sanalla. Esimerkiksi `^kissa` vaatii, että joko sisältö tai otsikko alkaa sanalla kissa.
 
 ## Käyttö suurella tietomäärällä
+
+```bash
+# Täytä tietokanta tiedolla. VAROITUS: Tyhjentää tietokannan ja config tiedoston kokonaan.
+python scripts/seed.py
+
+# Aja tehokkustesti
+python scripts/performance_test.py
+```
 
 Suuren suuren tietomäärän testejä varten tietokanta on alustettu `scripts/seed.py` skriptillä. Tauluissa on siis seuraavat määrät rivejä:
 
@@ -256,6 +165,53 @@ POST /api/signin took 0.386 seconds
 ```
 
 Sovellus toimii nyt riittävän tehokkaasti myös suurilla tietomäärillä. Ainoa ongelma, jolle en voi mitään on se, että jos hyppäämme viimeiselle sivulle esimerkiksi etusivulla, lataa sovellus todella kauan. Tämä kuitenkin johtuu siitä, että sqlite joutuu hakemaan kaikki muistiinpanot tietokannasta.
+
+## Tekoälyn käyttö raportti
+
+Osa koodinkannan dokumentaatio kommenteista on kirjoitettu tekoälyn avulla. Dokumentaatio on kuitenkin aina ihmisen tarkistama ja korjaama.
+
+### Käytetty alustuskehote
+
+```
+You are a skilled senior software developer your task is to write docstrings for given python functions. Use the following example as guide:
+
+---
+
+@csrf.validate("signin_page")
+@flash_fields
+def signin_action():
+    """
+    Handle the sign-in action, validating user credentials and responding
+    accordingly.
+
+    Retrieves form data, validates the credentials, and
+    checks the password against the stored hash. If there are any errors
+    during this process, appropriate error messages are flashed and the
+    user is redirected back to the sign-in page. On successful validation,
+    a token is generated and the user is redirected to the next page.
+
+    Returns:
+        Response: A Flask response object that either flashes errors and
+        redirects to the sign-in page or responds with a token and
+        redirects to the next page.
+    """
+
+    username, plain_password, next_page = _get_form_data()
+    errors = _validate_credentials(username, plain_password)
+    if errors:
+        return flash_errors(errors, "signin_page", next=next_page)
+
+    user, error = auth_service.get_user_by_username(username)
+    if error:
+        return flash_errors(error, "signin_page", next=next_page)
+
+    if not check_password_hash(user.password_hash, plain_password):
+        error = "Virheellinen käyttäjätunnus ja/tai salasana"
+        return flash_errors(error, "signin_page", next=next_page)
+
+    return _respond_with_token(user.token, next_page)
+
+```
 
 ## Lisenssi
 
