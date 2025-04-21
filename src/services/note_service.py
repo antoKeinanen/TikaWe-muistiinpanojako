@@ -169,33 +169,71 @@ def get_note_by_query(query: str, limit: int = 10, offset: int = 0):
     """
 
     sql_command = """
-    WITH matching AS (
+    WITH
+        content_matches AS (
+            SELECT rowid, rank
+            FROM notes_fts
+            WHERE notes_fts MATCH ?
+        ),
+        tag_matches AS (
+            SELECT tags.note_id, tags_fts.rank
+            FROM tags
+            JOIN tags_fts
+                ON tags_fts.rowid = tags.id
+            WHERE tags_fts MATCH ?
+        ),
+        all_matches AS (
+            SELECT rowid as note_id, rank FROM content_matches
+            UNION ALL
+            SELECT note_id, rank FROM tag_matches
+        ),
+        best_ranks AS (
+            SELECT note_id, MIN(rank) AS rank
+            FROM all_matches
+            GROUP BY note_id
+        )
+    SELECT DISTINCT
+        notes.id,
+        notes.title,
+        notes.content,
+        users.id,
+        users.username
+    FROM notes
+    JOIN best_ranks ON notes.id = best_ranks.note_id
+    JOIN users ON users.id = notes.user_id
+    ORDER BY best_ranks.rank
+    LIMIT ?
+    OFFSET ?;
+    """
+    notes = db.db_fetch_all(sql_command, [query, query, limit, offset])
+
+    sql_command = """
+    WITH
+    content_matches AS (
         SELECT rowid, rank
         FROM notes_fts
         WHERE notes_fts MATCH ?
+    ),
+    tag_matches AS (
+        SELECT tags.note_id, tags_fts.rank
+        FROM tags
+        JOIN tags_fts ON tags_fts.rowid = tags.id
+        WHERE tags_fts MATCH ?
+    ),
+    all_matches AS (
+        SELECT rowid   AS note_id, rank FROM content_matches
+        UNION ALL
+        SELECT note_id, rank FROM tag_matches
+    ),
+    best_ranks AS (
+        SELECT note_id, MIN(rank) AS rank
+        FROM all_matches
+        GROUP BY note_id
     )
-    SELECT
-        notes.id AS note_id,
-        notes.title,
-        notes.content,
-        users.id AS user_id,
-        users.username
-    FROM matching
-    JOIN notes ON notes.id = matching.rowid
-    JOIN users ON users.id = notes.user_id
-    LEFT JOIN tags ON tags.note_id = notes.id
-    ORDER BY matching.rank
-    LIMIT ?
-    OFFSET ?
+    SELECT COUNT(DISTINCT note_id) AS total
+    FROM best_ranks;
     """
-    notes = db.db_fetch_all(sql_command, [query, limit, offset])
-
-    sql_command = """
-    SELECT COUNT(DISTINCT rowid)
-    FROM notes_fts
-    WHERE notes_fts MATCH ?
-    """
-    note_count = db.db_fetch(sql_command, [query])
+    note_count = db.db_fetch(sql_command, [query, query])
     note_count = note_count[0][0]
 
     return [Note(*note) for note in notes], note_count

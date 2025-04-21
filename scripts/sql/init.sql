@@ -44,6 +44,8 @@ CREATE TABLE
         FOREIGN KEY (note_id) REFERENCES notes (id) ON UPDATE CASCADE ON DELETE CASCADE
     );
 
+CREATE VIRTUAL TABLE tags_fts USING fts5 (label, content = "tags", content_rowid = "id");
+
 CREATE TABLE
     user_statistics (
         user_id INTEGER PRIMARY KEY,
@@ -118,18 +120,51 @@ WHERE
 END;
 
 CREATE TRIGGER notes_fts_insert AFTER INSERT ON notes BEGIN
-    INSERT INTO notes_fts (rowid, title, content)
-    VALUES (NEW.id, NEW.title, NEW.content);
+INSERT INTO
+    notes_fts (rowid, title, content)
+VALUES
+    (NEW.id, NEW.title, NEW.content);
+
 END;
 
-CREATE TRIGGER notes_fts_update AFTER UPDATE ON notes BEGIN
-    UPDATE notes_fts
-    SET title = NEW.title,
-        content = NEW.content
-    WHERE rowid = OLD.id;
+CREATE TRIGGER notes_fts_update AFTER
+UPDATE ON notes BEGIN
+UPDATE notes_fts
+SET
+    title = NEW.title,
+    content = NEW.content
+WHERE
+    rowid = OLD.id;
+
 END;
 
 CREATE TRIGGER notes_fts_delete AFTER DELETE ON notes BEGIN
-    DELETE FROM notes_fts
-    WHERE rowid = OLD.id;
+DELETE FROM notes_fts
+WHERE
+    rowid = OLD.id;
+
+END;
+
+CREATE TRIGGER tags_fts_insert AFTER INSERT ON tags BEGIN
+INSERT INTO
+    tags_fts (rowid, label)
+VALUES
+    (NEW.id, NEW.label);
+
+END;
+
+CREATE TRIGGER tags_fts_update AFTER UPDATE ON tags BEGIN
+UPDATE tags_fts
+SET
+    label = NEW.label
+WHERE
+    rowid = OLD.id;
+
+END;
+
+CREATE TRIGGER tags_fts_delete AFTER DELETE ON tags BEGIN
+DELETE FROM tags_fts
+WHERE
+    rowid = OLD.id;
+
 END;
