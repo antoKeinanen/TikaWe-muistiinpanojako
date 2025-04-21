@@ -1,15 +1,8 @@
 from pathlib import Path
-import json
-import secrets
 import sqlite3
+from util.generate_config import generate_config
 
-Path("config.json").unlink(missing_ok=True)
-
-with open("config.json", "w") as file:
-    config = {
-        "CSRF_SECRET": secrets.token_urlsafe(32),
-    }
-    json.dump(config, file)
+generate_config()
 
 with open("scripts/sql/init.sql") as file:
     db_init_script = file.read()

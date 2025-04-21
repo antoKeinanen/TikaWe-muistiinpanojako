@@ -3,6 +3,7 @@ import secrets
 import flask
 from collections.abc import Callable
 from util.logger import Logger
+from util.config import config
 
 
 def setup(f: Callable):
@@ -29,7 +30,8 @@ def setup(f: Callable):
 
     @wraps(f)
     def decorated_function(*args: tuple, **kwargs: dict) -> flask.Response:
-        flask.session["csrf_token"] = secrets.token_hex(16)
+        if config.csrf_enabled:
+            flask.session["csrf_token"] = secrets.token_hex(16)
 
         return f(*args, **kwargs)
 
@@ -62,6 +64,9 @@ def validate(fallback: str = "index_page"):
     def decorator(f: Callable) -> Callable:
         @wraps(f)
         def decorated_function(*args: tuple, **kwargs: dict) -> flask.Response:
+            if not config.csrf_enabled:
+                return f(*args, **kwargs)
+
             client_csrf_token = flask.request.form.get("csrf_token")
             server_csrf_token = flask.session.get("csrf_token")
 

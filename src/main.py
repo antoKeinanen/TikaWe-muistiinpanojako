@@ -1,18 +1,45 @@
-from flask import Flask
+from flask import Flask, g, request
 import routes.auth_route
 import routes.index_route
 import routes.note_route
 import routes.search_route
 import routes.comment_route
 import routes.user_route
-from util.config import parse_config
+from util.config import config
 from injectors.error_injector import inject_errors
 from injectors.field_injector import inject_fields
+from pyinstrument import Profiler
+import os
+from datetime import datetime
 
 app = Flask(__name__, static_folder="static")
 
-config = parse_config()
-app.secret_key = config["CSRF_SECRET"]
+
+@app.before_request
+def before_request():  # noqa: D103
+    g.profiler = Profiler()
+    g.profiler.start()
+
+
+@app.after_request
+def after_request(response):  # noqa: ANN001, D103
+    if not hasattr(g, "profiler"):
+        return response
+    profiler: Profiler = g.profiler
+    profiler.stop()
+    html = profiler.output_html()
+    request_time = datetime.now().strftime("%Y%m%d_%H%M%S")  # noqa: DTZ005
+    request_path = request.path.strip("/").replace("/", "_") or "root"
+    filename = f"profile_{request_time}_{request_path}.html"
+    output_dir = os.path.join(os.getcwd(), "profiles")  # noqa: PTH109, PTH118
+    os.makedirs(output_dir, exist_ok=True)  # noqa: PTH103
+    file_path = os.path.join(output_dir, filename)  # noqa: PTH118
+    with open(file_path, "w") as f:
+        f.write(html)
+    return response
+
+
+app.secret_key = config.csrf_secret
 
 app.context_processor(inject_errors)
 app.context_processor(inject_fields)

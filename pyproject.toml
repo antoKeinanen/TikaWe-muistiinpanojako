@@ -48,7 +48,7 @@ lint.ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "src/test/*" = ["D"]
-"scripts/*" = ["D"]
+"scripts/*" = ["D", "S310", "T201"]
 
 [tool.pytest.ini_options]
 addopts = "-ra -q -n 4 --random-order"

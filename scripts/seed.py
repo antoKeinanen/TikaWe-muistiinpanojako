@@ -1,24 +1,19 @@
-from pathlib import Path
-import json
 import secrets
 import sqlite3
+from util.generate_config import generate_config
 from util.sanalista import sanalista
-from util.nimet import etunimet, sukunimet
-import itertools
 import random
+from pathlib import Path
 
-USER_COUNT = 10
-NOTE_COUNT = USER_COUNT * 5
-TAG_COUNT = NOTE_COUNT * 3
-COMMENT_COUNT = NOTE_COUNT * 5
+random.seed(200)
 
-Path("config.json").unlink(missing_ok=True)
+USER_COUNT = 1_000_000
+NOTE_COUNT = 5_000_000
+TAG_COUNT = 3_000_000
+COMMENT_COUNT = 15_000_000
 
-with open("config.json", "w") as file:
-    config = {
-        "CSRF_SECRET": secrets.token_urlsafe(32),
-    }
-    json.dump(config, file)
+generate_config()
+
 
 with open("scripts/sql/init.sql") as file:
     db_init_script = file.read()
@@ -29,54 +24,46 @@ with sqlite3.connect("database.db") as db:
     cursor = db.cursor()
     cursor.executescript(db_init_script)
 
-    all_names = itertools.product(etunimet, sukunimet)
-    all_names = [e + s for e, s in all_names]
+    for i in range(USER_COUNT):
+        if i % (USER_COUNT // 10) == 0:
+            print(f"{i}/{USER_COUNT} users added")
+        password = secrets.token_urlsafe(32)
+        token = secrets.token_urlsafe(32)
+        cursor.execute(
+            "INSERT INTO users (username, password_hash, token) VALUES (?, ?, ?)",
+            (f"User{i}", password, token),
+        )
 
-    if len(all_names) < USER_COUNT:
-        msg = f"Maksimi määrä käyttäjiä on {len(all_names)}"
-        raise ValueError(msg)
-
-    usernames = random.sample(all_names, USER_COUNT)
-    passwords = [secrets.token_urlsafe(32) for _ in range(USER_COUNT)]
-    tokens = [secrets.token_urlsafe(32) for _ in range(USER_COUNT)]
-
-    cursor.executemany(
-        "INSERT INTO users (username, password_hash, token) VALUES (?, ?, ?)",
-        zip(usernames, passwords, tokens, strict=False),
-    )
-
-    notes = []
-    for _ in range(NOTE_COUNT):
+    for i in range(NOTE_COUNT):
+        if i % (NOTE_COUNT // 10) == 0:
+            print(f"{i}/{NOTE_COUNT} notes added")
         user_id = random.randint(1, USER_COUNT)
         num_words = random.randint(5, 15)
         title = " ".join(random.choices(sanalista, k=2))
         content = " ".join(random.choices(sanalista, k=num_words))
-        notes.append((user_id, content, title))
+        cursor.execute(
+            "INSERT INTO notes (user_id, content, title) VALUES (?, ?, ?)",
+            (user_id, content, title),
+        )
 
-    cursor.executemany(
-        "INSERT INTO notes (user_id, content, title) VALUES (?, ?, ?)",
-        notes,
-    )
+    for i in range(TAG_COUNT):
+        if i % (TAG_COUNT // 10) == 0:
+            print(f"{i}/{TAG_COUNT} tags added")
+        note_id = random.randint(1, NOTE_COUNT)
+        label = random.choice(sanalista)
+        cursor.execute(
+            "INSERT INTO tags (note_id, label) VALUES (?, ?)",
+            (note_id, label),
+        )
 
-    tags = []
-    for note_id in range(1, NOTE_COUNT + 1):
-        for _ in range(3):
-            label = random.choice(sanalista)
-            tags.append((note_id, label))
-    cursor.executemany(
-        "INSERT INTO tags (note_id, label) VALUES (?, ?)",
-        tags,
-    )
-
-    comments = []
-    for _ in range(COMMENT_COUNT):
+    for i in range(COMMENT_COUNT):
+        if i % (COMMENT_COUNT // 10) == 0:
+            print(f"{i}/{COMMENT_COUNT} comments added")
         user_id = random.randint(1, USER_COUNT)
         note_id = random.randint(1, NOTE_COUNT)
         num_words = random.randint(3, 20)
         content = " ".join(random.choices(sanalista, k=num_words))
-        comments.append((user_id, note_id, content))
-
-    cursor.executemany(
-        "INSERT INTO comments (user_id, note_id, content) VALUES (?, ?, ?)",
-        comments,
-    )
+        cursor.execute(
+            "INSERT INTO comments (user_id, note_id, content) VALUES (?, ?, ?)",
+            (user_id, note_id, content),
+        )
