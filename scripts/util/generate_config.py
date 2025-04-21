@@ -9,7 +9,7 @@ def generate_config():
 
     with config_path.open("w") as file:
         config = {
-            "csrf_token": secrets.token_urlsafe(32),
+            "csrf_secret": secrets.token_urlsafe(32),
             "csrf_enabled": True,
         }
         json.dump(config, file)
