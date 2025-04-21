@@ -18,6 +18,13 @@ CREATE TABLE
         FOREIGN KEY (user_id) REFERENCES users (id) ON UPDATE CASCADE ON DELETE CASCADE
     );
 
+CREATE VIRTUAL TABLE notes_fts USING fts5 (
+    title,
+    content,
+    content = "notes",
+    content_rowid = "id"
+);
+
 CREATE TABLE
     comments (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -108,4 +115,21 @@ SET
 WHERE
     user_id = OLD.user_id;
 
+END;
+
+CREATE TRIGGER notes_fts_insert AFTER INSERT ON notes BEGIN
+    INSERT INTO notes_fts (rowid, title, content)
+    VALUES (NEW.id, NEW.title, NEW.content);
+END;
+
+CREATE TRIGGER notes_fts_update AFTER UPDATE ON notes BEGIN
+    UPDATE notes_fts
+    SET title = NEW.title,
+        content = NEW.content
+    WHERE rowid = OLD.id;
+END;
+
+CREATE TRIGGER notes_fts_delete AFTER DELETE ON notes BEGIN
+    DELETE FROM notes_fts
+    WHERE rowid = OLD.id;
 END;

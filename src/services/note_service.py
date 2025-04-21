@@ -169,35 +169,33 @@ def get_note_by_query(query: str, limit: int = 10, offset: int = 0):
     """
 
     sql_command = """
-    SELECT DISTINCT
+    WITH matching AS (
+        SELECT rowid, rank
+        FROM notes_fts
+        WHERE notes_fts MATCH ?
+    )
+    SELECT
         notes.id AS note_id,
         notes.title,
         notes.content,
         users.id AS user_id,
         users.username
-    FROM notes
-    JOIN users ON notes.user_id = users.id
-    JOIN tags ON notes.id = tags.note_id
-    WHERE notes.title LIKE ?
-        OR tags.label LIKE ?
-    ORDER BY notes.created_at DESC
+    FROM matching
+    JOIN notes ON notes.id = matching.rowid
+    JOIN users ON users.id = notes.user_id
+    LEFT JOIN tags ON tags.note_id = notes.id
+    ORDER BY matching.rank
     LIMIT ?
     OFFSET ?
     """
-
-    query = f"%{query}%"
-
-    notes = db.db_fetch_all(sql_command, [query, query, limit, offset])
+    notes = db.db_fetch_all(sql_command, [query, limit, offset])
 
     sql_command = """
-    SELECT count(DISTINCT notes.id)
-    FROM notes
-    JOIN tags ON notes.id = tags.note_id
-    WHERE
-        notes.title LIKE ?
-        OR tags.label LIKE ?
+    SELECT COUNT(DISTINCT rowid)
+    FROM notes_fts
+    WHERE notes_fts MATCH ?
     """
-    note_count = db.db_fetch(sql_command, [query, query])
+    note_count = db.db_fetch(sql_command, [query])
     note_count = note_count[0][0]
 
     return [Note(*note) for note in notes], note_count
